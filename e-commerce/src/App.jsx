@@ -2,29 +2,55 @@
 import './App.css'
 import Home from './componets/home/Home'
 
-const PRODUCTS = [{
-  productImg: "https://imgs.search.brave.com/WDcfXSzeZlfbluFmVcH-8aLUkV9J64P4dHHILBrG6ws/rs:fit:860:0:0/g:ce/aHR0cHM6Ly93d3cu/ZnVsbGg0cmQuY29t/LmFyL2ltZy9wcm9k/dWN0b3MvMTgvbW9u/aXRvci0yNy1zYW1z/dW5nLWxlZC10MzUw/ZmgtMC5qcGc",
-  productName: "Monitor Gamer Samsung LF24T350FHLCZB 24",
-  productBrand: "Samsung",
-  productType:"Monitor",
-  productPrice:"10",
-  available: true
-},{
-  productImg:"https://images.fravega.com/f1000/10c3feb11c5c1a6e039df9222b7de650.png",
-  productName:"Smart Kassel Teclado Gamer Xtrike Me",
-  productBrand: "Xtrike me",
-  productType: "Teclado",
-  productPrice:"100",
-  available: true
-
-},
-{ productImg: "https://imgs.https://images.fravega.com/f1000/0ac2ce0b6b4946b5579ff9bc1b597107.jpg.webp.brave.com/WDcfXSzeZlfbluFmVcH-8aLUkV9J64P4dHHILBrG6ws/rs:fit:860:0:0/g:ce/aHR0cHM6Ly93d3cu/ZnVsbGg0cmQuY29t/LmFyL2ltZy9wcm9k/dWN0b3MvMTgvbW9u/aXRvci0yNy1zYW1z/dW5nLWxlZC10MzUw/ZmgtMC5qcGc",
-productName: "Monitor Philips 27 272V8LA/55",
-productBrand: "Philips",
-productType:"Monitor",
-productPrice:"12",
-available: true
-}
+const PRODUCTOSPC = [
+  {
+    id: 1,
+    productName: "Procesador Intel Core i9-10900K",
+    productBrand: "Intel",
+    productType: "Procesador",
+    productPrice: 599.99,
+    productImg: "https://images-na.ssl-images-amazon.com/images/I/61qUfPKfqJL.jpg"
+  },
+  {
+    id: 2,
+    productName: "Tarjeta Gráfica NVIDIA GeForce RTX 3080",
+    productBrand: "NVIDIA",
+    productType: "Tarjeta Gráfica",
+    productPrice: 899.99,
+    productImg: "https://m.media-amazon.com/images/I/41e1zP76o7L.jpg"
+  },
+  {
+    id: 3,
+    productName: "Memoria RAM Corsair Vengeance RGB Pro 16GB",
+    productBrand: "Corsair",
+    productType: "Memoria RAM",
+    productPrice: 129.99,
+    productImg: "https://m.media-amazon.com/images/I/51jnTiyHJUL.jpg"
+  },
+  {
+    id: 4,
+    productName: "SSD Samsung 970 EVO Plus 1TB",
+    productBrand: "Samsung",
+    productType: "SSD",
+    productPrice: 199.99,
+    productImg: "https://m.media-amazon.com/images/I/41QZdNEpzAL.jpg"
+  },
+  {
+    id: 5,
+    productName: "Procesador AMD Ryzen 9 5900X",
+    productBrand: "AMD",
+    productType: "Procesador",
+    productPrice: 549.99,
+    productImg: "https://m.media-amazon.com/images/I/51fNCtt4E3L.jpg"
+  },
+  {
+    id: 6,
+    productName: "Tarjeta Gráfica AMD Radeon RX 6800 XT",
+    productBrand: "AMD",
+    productType: "Tarjeta Gráfica",
+    productPrice: 649.99,
+    productImg: "https://i.blogs.es/a22729/captura-de-pantalla-2020-11-18-a-las-20.55.29/original.png"
+  }
 ]
 
 function App() {
