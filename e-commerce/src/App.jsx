@@ -1,4 +1,5 @@
 
+import { useState } from 'react'
 import './App.css'
 import Home from './componets/home/Home'
 
@@ -9,7 +10,8 @@ const PRODUCTOSPC = [
     productBrand: "Intel",
     productType: "Procesador",
     productPrice: 599.99,
-    productImg: "https://images-na.ssl-images-amazon.com/images/I/61qUfPKfqJL.jpg"
+    productImg: "https://images-na.ssl-images-amazon.com/images/I/61qUfPKfqJL.jpg",
+    available: true
   },
   {
     id: 2,
@@ -17,7 +19,8 @@ const PRODUCTOSPC = [
     productBrand: "NVIDIA",
     productType: "Tarjeta Gráfica",
     productPrice: 899.99,
-    productImg: "https://m.media-amazon.com/images/I/41e1zP76o7L.jpg"
+    productImg: "https://m.media-amazon.com/images/I/41e1zP76o7L.jpg",
+    available: true
   },
   {
     id: 3,
@@ -25,7 +28,8 @@ const PRODUCTOSPC = [
     productBrand: "Corsair",
     productType: "Memoria RAM",
     productPrice: 129.99,
-    productImg: "https://m.media-amazon.com/images/I/51jnTiyHJUL.jpg"
+    productImg: "https://m.media-amazon.com/images/I/51jnTiyHJUL.jpg",
+    available: false
   },
   {
     id: 4,
@@ -33,7 +37,8 @@ const PRODUCTOSPC = [
     productBrand: "Samsung",
     productType: "SSD",
     productPrice: 199.99,
-    productImg: "https://m.media-amazon.com/images/I/41QZdNEpzAL.jpg"
+    productImg: "https://m.media-amazon.com/images/I/41QZdNEpzAL.jpg",
+    available: true
   },
   {
     id: 5,
@@ -41,7 +46,8 @@ const PRODUCTOSPC = [
     productBrand: "AMD",
     productType: "Procesador",
     productPrice: 549.99,
-    productImg: "https://m.media-amazon.com/images/I/51fNCtt4E3L.jpg"
+    productImg: "https://m.media-amazon.com/images/I/51fNCtt4E3L.jpg",
+    available: true
   },
   {
     id: 6,
@@ -49,15 +55,29 @@ const PRODUCTOSPC = [
     productBrand: "AMD",
     productType: "Tarjeta Gráfica",
     productPrice: 649.99,
-    productImg: "https://i.blogs.es/a22729/captura-de-pantalla-2020-11-18-a-las-20.55.29/original.png"
+    productImg: "https://i.blogs.es/a22729/captura-de-pantalla-2020-11-18-a-las-20.55.29/original.png",
+    available: true
   }
 ]
 
 function App() {
- 
+ const [product, setProduct] = useState(PRODUCTOSPC)
+ const saveProductDataHandler = (enteredProductData) =>{
+  const productData = {
+    ...enteredProductData,
+    id: Math.random().toString(),
+  };
+  setProduct((prev)=> [...prev, productData])
+ }
 
   return (
-    <Home/>
+    <div>
+    <p>nav bar</p>
+    <p>login</p>
+    <p>carrito</p>
+    <Home productList={product} onProducUp={saveProductDataHandler}/>
+    
+    </div>
   )
 }
 
