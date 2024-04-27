@@ -1,12 +1,20 @@
-import React from 'react'
-import PropTypes from 'prop-types'
 
-const Home = props => {
+import PropTypes from 'prop-types'
+import ProductList from '../productList/ProductList'
+import NewProduct from '../newProduct/NewProduct'
+
+const Home =({productList, onProducUp})=> {
   return (
-    <div>Home</div>
+    <div>
+      <NewProduct onProductDataSaved={onProducUp}/>
+      <ProductList productList = {productList}/>
+    </div>
   )
 }
 
-Home.propTypes = {}
+Home.propTypes = {
+  productList: PropTypes.array,
+  onProducUp: PropTypes.func
+}
 
 export default Home
