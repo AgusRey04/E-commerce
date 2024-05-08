@@ -4,7 +4,8 @@ import ProductItem from '../productItem/ProductItem'
 
 const ProductList = ({productList}) => {
 
-    const productListFiltred = productList.filter((p)=>p.available== true)
+    //const productListFiltred = productList.filter((p)=>p.available== true)
+    const productListFiltred = productList
   return (
     <div>
         {productListFiltred.map((p)=>(
@@ -14,7 +15,8 @@ const ProductList = ({productList}) => {
                 brand={p.productBrand}
                 type={p.productType}
                 price={p.productPrice}
-                img={p.productImg}          
+                img={p.productImg}  
+                available={p.available}        
             />
         ))}
     </div>

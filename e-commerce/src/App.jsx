@@ -2,6 +2,11 @@
 import { useState } from 'react'
 import './App.css'
 import Home from './componets/home/Home'
+import Header from './componets/header/Header'
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import MaiLayout from './componets/layout/MaiLayout'
+import Login from './componets/login/Login'
+import CartShop from './componets/cartShop/CartShop'
 
 const PRODUCTOSPC = [
   {
@@ -69,16 +74,37 @@ function App() {
   };
   setProduct((prev)=> [...prev, productData])
  }
+ const router = createBrowserRouter([
+    {
+       path: "/",
+       element: (
+        <MaiLayout>
+          <Home  productList={product} onProducUp={saveProductDataHandler}/>
+        </MaiLayout>
+       ),
+    },
+    {
+      path: "/login",
+      element: (
+       <MaiLayout>
+          <Login/>
+       </MaiLayout>
+      ),
+   },
+   {
+    path: "/cart",
+    element: (
+     <MaiLayout>
+        <CartShop/>
+     </MaiLayout>
+    ),
+ }
 
-  return (
-    <div>
-    <p>nav bar</p>
-    <p>login</p>
-    <p>carrito</p>
-    <Home productList={product} onProducUp={saveProductDataHandler}/>
-    
-    </div>
-  )
+ ])
+
+  return <RouterProvider router= {router}/>;
+
+  
 }
 
 export default App
