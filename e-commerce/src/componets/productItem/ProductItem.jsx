@@ -20,7 +20,7 @@ const ProductItem = ({name,brand,img,price, type, available,onNewState})=> {
                     <Card.Title>{name}</Card.Title>
                     <Card.Subtitle>{brand}</Card.Subtitle>
                     <div>{type}</div>
-                    <p>{price}</p>
+                    <p>${price}</p>
                     <Button className="btn btn-success">Agregar carrito</Button>
                     {newState ? 
                     <Button className="btn btn-danger" onClick={handleClick} onSubmit={handleStateSumbit}>Dar de baja</Button>
