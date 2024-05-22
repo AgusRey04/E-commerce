@@ -5,7 +5,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import MaiLayout from './componets/layout/MaiLayout'
 import Login from './componets/login/Login'
 import CartShop from './componets/cartShop/CartShop'
-
+import ErrorPage from "./componets/errorPage/ErrorPage"
 
 
 function App() {
@@ -35,7 +35,17 @@ function App() {
         <CartShop/>
      </MaiLayout>
     ),
- }
+
+    },
+    {
+      path: "*",
+      element: (
+       <MaiLayout>
+         <ErrorPage/>
+       </MaiLayout>
+      ),
+   }
+ 
 
  ])
 
