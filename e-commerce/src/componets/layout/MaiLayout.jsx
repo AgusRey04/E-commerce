@@ -11,6 +11,8 @@ const MaiLayout = ({children}) => {
   )
 }
 
-MaiLayout.propTypes = {}
+MaiLayout.propTypes = {
+  children: PropTypes.node.isRequired,
+}
 
 export default MaiLayout
