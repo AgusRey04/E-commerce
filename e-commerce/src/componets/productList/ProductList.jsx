@@ -4,24 +4,27 @@ import ProductItem from '../productItem/ProductItem'
 
 const ProductList = ({productList}) => {
 
-    //const productListFiltred = productList.filter((p)=>p.available== true)
-    const productListFiltred = productList
   return (
     <div>
-        {productListFiltred.map((p)=>(
+        {productList.length >0 ?(
+        productList.map((p)=>(
             <ProductItem
                 key={p.id}
-                name={p.productName}
-                brand={p.productBrand}
-                type={p.productType}
-                price={p.productPrice}
-                img={p.productImg}  
+                id={p.id}
+                name={p.name}
+                brand={p.brand}
+                type={p.type}
+                price={p.price}
+                img={p.img}  
                 available={p.available}        
             />
-        ))}
+        ))
+    ):(
+        <p>No hay nada para mostrar</p>
+    ) }
     </div>
-  )
-}
+  );
+};
 
 ProductList.propTypes = {
     productList: PropTypes.array

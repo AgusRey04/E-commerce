@@ -56,7 +56,7 @@ const Header = ({onSearch})  => {
 }
 
 Header.propTypes = {
-    onSearch: PropTypes.func.isRequired,
+    onSearch: PropTypes.func,
 }
 
 export default Header
