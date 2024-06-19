@@ -1,30 +1,32 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import ProductItem from '../productItem/ProductItem'
+import React from "react";
+import PropTypes from "prop-types";
+import ProductItem from "../productItem/ProductItem";
 
-const ProductList = ({productList}) => {
-
-    //const productListFiltred = productList.filter((p)=>p.available== true)
-    const productListFiltred = productList
+const ProductList = ({ productList }) => {
   return (
     <div>
-        {productListFiltred.map((p)=>(
-            <ProductItem
-                key={p.id}
-                name={p.productName}
-                brand={p.productBrand}
-                type={p.productType}
-                price={p.productPrice}
-                img={p.productImg}  
-                available={p.available}        
-            />
-        ))}
+      {productList.length > 0 ? (
+        productList.map((p) => (
+          <ProductItem
+            key={p.id}
+            id={p.id}
+            name={p.name}
+            brand={p.brand}
+            type={p.type}
+            price={p.price}
+            img={p.img}
+            available={p.available}
+          />
+        ))
+      ) : (
+        <p>No hay nada para mostrar</p>
+      )}
     </div>
-  )
-}
+  );
+};
 
 ProductList.propTypes = {
-    productList: PropTypes.array
-}
+  productList: PropTypes.array,
+};
 
-export default ProductList
+export default ProductList;
