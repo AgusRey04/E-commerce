@@ -1,17 +1,12 @@
-import React, { useState } from 'react'
+
 import PropTypes from 'prop-types'
 import { Button, Card } from 'react-bootstrap'
 
 
-const ProductItem = ({name,brand,img,price, type, available,onNewState})=> {
+const ProductItem = ({name,brand,img,price, type, })=> {
 
-    const [newState, setNewState] = useState(available)
-    const handleClick = () =>{
-        setNewState(!newState)
-    }
-    const handleStateSumbit = () =>{
-        onNewState(newState)
-    }
+    
+   
   return (
         <div>
             <Card className="card border-info mb-3" >
@@ -22,11 +17,7 @@ const ProductItem = ({name,brand,img,price, type, available,onNewState})=> {
                     <div>{type}</div>
                     <p>${price}</p>
                     <Button className="btn btn-success">Agregar carrito</Button>
-                    {newState ? 
-                    <Button className="btn btn-danger" onClick={handleClick} onSubmit={handleStateSumbit}>Dar de baja</Button>
-                        :
-                    <Button className="btn btn-success" onClick={handleClick}>Dar de alta</Button>
-                    }
+                
                     <Button>Editar</Button>
                     <Button className="btn btn-danger">Eliminar</Button>
                 </Card.Body>
@@ -47,7 +38,7 @@ ProductItem.propTypes = {
     price: PropTypes.number,
     type: PropTypes.string,
     available: PropTypes.bool,
-    onNewState: PropTypes.func,
+    
     
     
 }

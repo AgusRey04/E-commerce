@@ -1,9 +1,10 @@
-import React from 'react'
+
 import PropTypes from 'prop-types'
 import ProductItem from '../productItem/ProductItem'
 
-const ProductList = ({productList}) => {
 
+const ProductList = ({productList, }) => {
+ 
   return (
     <div>
         {productList.length >0 ?(
@@ -16,7 +17,8 @@ const ProductList = ({productList}) => {
                 type={p.type}
                 price={p.price}
                 img={p.img}  
-                available={p.available}        
+                available={p.available}  
+                      
             />
         ))
     ):(
@@ -27,7 +29,8 @@ const ProductList = ({productList}) => {
 };
 
 ProductList.propTypes = {
-    productList: PropTypes.array
+    productList: PropTypes.array,
+   
 }
 
 export default ProductList
