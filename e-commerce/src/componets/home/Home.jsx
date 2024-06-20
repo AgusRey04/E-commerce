@@ -2,12 +2,14 @@
 
 import ProductList from '../productList/ProductList'
 import NewProduct from '../newProduct/NewProduct'
-import {  useEffect, useState } from 'react'
+import {  useCallback, useEffect, useState } from 'react'
 
 
 const Home =()=> {
   const [product, setProduct] = useState([])
   const [reload, setReload] = useState(true)
+
+
 
   useEffect(() => {
     fetch("http://localhost:8000/products", {
@@ -30,7 +32,26 @@ const Home =()=> {
     
   }, [reload]);
 
-  
+  const deleteProduct = useCallback( async (id) => {
+    console.log("id en el home",id)
+     try{
+       const response = await fetch("http://localhost:8000/products/$(id)",{
+         method: "DELETE",
+        mode:"cors",
+         headers:{"Content-Type": "application/json"}
+        
+       })
+       if(!response.ok){
+         throw new Error("Error al borrar producto")
+       }else{
+        console.log("Producto eliminado")
+        setProduct(prevProducts => prevProducts.filter(product=> product.id !== id))
+       }
+     }catch(error){
+      alert(error)
+     }
+  },[])
+
 
   const saveProductDataHandler = async (enteredProductData) =>{
     const productDto = {
@@ -56,7 +77,7 @@ const Home =()=> {
     });
 
     if(!response.ok){
-      throw new Error("Error al agregar el libro")
+      throw new Error("Error al agregar producto")
     }
 
     const data = await response.json();
@@ -67,12 +88,16 @@ const Home =()=> {
     
   }
   setReload(!reload)
+
+
+
 }
+ 
 
   return (
     <div>
       <NewProduct onProductDataSaved={saveProductDataHandler}/>
-      <ProductList productList = {product} />
+      <ProductList productList = {product} onDeleteProduct={deleteProduct} />
     </div>
   )
  

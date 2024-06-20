@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import ProductItem from '../productItem/ProductItem'
 
 
-const ProductList = ({productList, }) => {
+const ProductList = ({productList,onDeleteProduct }) => {
  
   return (
     <div>
@@ -15,9 +15,10 @@ const ProductList = ({productList, }) => {
                 name={p.name}
                 brand={p.brand}
                 type={p.type}
-                price={p.price}
+                price={Number(p.price)}
                 img={p.img}  
                 available={p.available}  
+                onDeleteProduct={onDeleteProduct}
                       
             />
         ))
@@ -30,6 +31,7 @@ const ProductList = ({productList, }) => {
 
 ProductList.propTypes = {
     productList: PropTypes.array,
+    onDeleteProduct: PropTypes.func.isRequired,
    
 }
 
