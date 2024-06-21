@@ -6,6 +6,8 @@ const Home = () => {
   const [product, setProduct] = useState([]);
   const [reload, setReload] = useState(true);
 
+  //------PEDIDO DE LISTA DE PRODUCTOS
+
   useEffect(() => {
     fetch("http://localhost:8000/products", {
       method: "GET",
@@ -26,8 +28,9 @@ const Home = () => {
       });
   }, [reload]);
 
+  //---------BORRAR PRODUCTO------------
   const deleteProduct = useCallback(async (id) => {
-    console.log("id en el home", id);
+
     try {
       const response = await fetch(`http://localhost:8000/products/${id}`, {
         method: "DELETE",
@@ -46,7 +49,7 @@ const Home = () => {
       alert(error);
     }
   }, []);
-
+  //--------- AGRAGAR PRODUCTO---------------
   const saveProductDataHandler = async (enteredProductData) => {
     const productDto = {
       name: enteredProductData.productName,
@@ -70,6 +73,8 @@ const Home = () => {
 
       if (!response.ok) {
         throw new Error("Error al agregar producto");
+      } else {
+        console.log("Producto Agregado")
       }
 
       const data = await response.json();
@@ -80,11 +85,38 @@ const Home = () => {
     }
     setReload(!reload);
   };
+  //------- EDITAR PRECIO DEL PRODUCTO---------
+  const sumbitNewPrice = async (newPrice, product) => {
+    console.log("precio", newPrice)
+    console.log("id", product.id)
+    const newPriceDto = {
+      ...product,
+      price: newPrice
+    }
+    try {
+      const response = await fetch(`http://localhost:8000/products/${product.id}`, {
+        method: "PUT",
+        mode: "cors",
+        headers: { "Content-Type": "application/json", },
+        body: JSON.stringify(newPriceDto),
+      });
+      if (!response.ok) {
+        throw new Error("Error al editar el producto")
+      } else {
+        console.log("Precio actualizado")
+      }
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      alert(error)
+    }
+    setReload(!reload);
+  }
 
   return (
     <div>
       <NewProduct onProductDataSaved={saveProductDataHandler} />
-      <ProductList productList={product} onDeleteProduct={deleteProduct} />
+      <ProductList productList={product} onDeleteProduct={deleteProduct} onNewPrice={sumbitNewPrice} />
     </div>
   );
 };
