@@ -31,16 +31,20 @@ const Login = () => {
         body: JSON.stringify({ username, password }),
       });
 
-      if (!response.ok) {
-        throw new Error("Usuario o contraseña incorrectos");
+      if (response.ok) {
+        const userData = await response.json();
+        console.log("Datos del usuario autenticado:", userData);
+        navigate("/");
+      } else {
+        // Error de autenticación
+        setError("Usuario o contraseña incorrectos");
       }
-
-      const { accessToken, refreshToken } = await response.json();
-      console.log("Login successful", accessToken, refreshToken);
-      navigate("/home");
     } catch (error) {
-      console.error("Error", error.message);
-      setError("Usuario o contraseña incorrectos pero por JSX");
+      // Error de red o del servidor
+      setError(
+        "Error al iniciar sesión. Por favor, inténtalo de nuevo más tarde"
+      );
+      console.error("Error al iniciar sesión:", error);
     }
   };
 
