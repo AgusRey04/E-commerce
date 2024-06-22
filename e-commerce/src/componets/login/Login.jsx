@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
@@ -6,12 +6,17 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
-
 const Login = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (localStorage.getItem("logged_in_user")) {
+      navigate("/logout");
+    }
+  }, [navigate]);
 
   const handleUserChange = (event) => {
     setUsername(event.target.value);
@@ -33,6 +38,8 @@ const Login = () => {
 
       if (response.ok) {
         const userData = await response.json();
+        localStorage.setItem("logged_in_user", JSON.stringify(userData));
+
         console.log("Datos del usuario autenticado:", userData);
         navigate("/");
       } else {

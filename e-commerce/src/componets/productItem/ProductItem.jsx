@@ -1,55 +1,80 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
-import { Button, Card } from 'react-bootstrap'
+import PropTypes from "prop-types";
+import { useState } from "react";
+import { Button, Card, Form } from "react-bootstrap";
 
+const ProductItem = ({ product, onDeleteProduct, onNewPrice }) => {
+  const [showForm, setShowform] = useState(false);
+  const [newPrice, setNewPrice] = useState();
 
-const ProductItem = ({name,brand,img,price, type, available,onNewState})=> {
+  const deleteProduct = () => {
+    onDeleteProduct(product.id);
+  };
 
-    const [newState, setNewState] = useState(available)
-    const handleClick = () =>{
-        setNewState(!newState)
+  const editPriceProduct = () => {
+    setShowform(true);
+  };
+
+  const handleNewPrice = (e) => {
+    setNewPrice(e.target.value);
+  };
+  const sumbitNewPrice = (e) => {
+    e.preventDefault();
+    if (newPrice > 0) {
+      console.log(product, newPrice);
+      onNewPrice(newPrice, product);
+      setShowform(false);
+      setNewPrice("");
+    } else {
+      alert("El valor ingresado debe ser mayor a 0");
+      setShowform(false);
+      setNewPrice("");
     }
-    const handleStateSumbit = () =>{
-        onNewState(newState)
-    }
+  };
+
   return (
-        <div>
-            <Card className="card border-info mb-3" >
-                <Card.Img height={300} variant='top' src={img} />
-                <Card.Body>
-                    <Card.Title>{name}</Card.Title>
-                    <Card.Subtitle>{brand}</Card.Subtitle>
-                    <div>{type}</div>
-                    <p>${price}</p>
-                    <Button className="btn btn-success">Agregar carrito</Button>
-                    {newState ? 
-                    <Button className="btn btn-danger" onClick={handleClick} onSubmit={handleStateSumbit}>Dar de baja</Button>
-                        :
-                    <Button className="btn btn-success" onClick={handleClick}>Dar de alta</Button>
-                    }
-                    <Button>Editar</Button>
-                    <Button className="btn btn-danger">Eliminar</Button>
-                </Card.Body>
-                
-            </Card>
+    <div>
+      <Card className="card border-info mb-3">
+        <Card.Img height={300} variant="top" src={product.img} />
+        <Card.Body>
+          <Card.Title>{product.name}</Card.Title>
+          <Card.Subtitle>{product.brand}</Card.Subtitle>
+          <div>{product.type}</div>
+          {showForm ? (
+            <Form onSubmit={sumbitNewPrice}>
+              <Form.Label>Nuevo Precio</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Ingrese el nuevo valor del producto"
+                onChange={handleNewPrice}
+                value={newPrice}
+              />
+              <Button type="sumbit">Aceptar</Button>
+            </Form>
+          ) : (
+            <p>{product.price}</p>
+          )}
 
-        </div>
-
-
-   
-  )
-}
+          {showForm ? (
+            ""
+          ) : (
+            <div>
+              <Button className="btn btn-success">Agregar carrito</Button>
+              <Button onClick={editPriceProduct}>Cambiar precio</Button>
+              <Button className="btn btn-danger" onClick={deleteProduct}>
+                Eliminar
+              </Button>
+            </div>
+          )}
+        </Card.Body>
+      </Card>
+    </div>
+  );
+};
 
 ProductItem.propTypes = {
-    name: PropTypes.string,
-    brand: PropTypes.string,
-    img: PropTypes.string,
-    price: PropTypes.number,
-    type: PropTypes.string,
-    available: PropTypes.bool,
-    onNewState: PropTypes.func,
-    
-    
-}
+  product: PropTypes.object,
+  onDeleteProduct: PropTypes.func.isRequired,
+  onNewPrice: PropTypes.func.isRequired,
+};
 
-export default ProductItem
+export default ProductItem;
