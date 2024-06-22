@@ -8,8 +8,8 @@ const Logout = () => {
     localStorage.removeItem("logged_in_user");
     navigate("/login");
   };
-    const dataUser = JSON.parse(localStorage.getItem("logged_in_user"))
-    console.log(dataUser)
+  const dataUser = JSON.parse(localStorage.getItem("logged_in_user"));
+  console.log(dataUser);
   return (
     <>
       <Form>
