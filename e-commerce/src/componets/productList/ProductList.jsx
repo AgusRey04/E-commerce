@@ -1,34 +1,29 @@
-
-import PropTypes from 'prop-types'
-import ProductItem from '../productItem/ProductItem'
-
+import PropTypes from "prop-types";
+import ProductItem from "../productItem/ProductItem";
 
 const ProductList = ({ productList, onDeleteProduct, onNewPrice }) => {
-
-    return (
-        <div>
-            {productList.length > 0 ? (
-                productList.map((p) => (
-                    <ProductItem
-                        key={p.id}
-                        product={p}
-                        onDeleteProduct={onDeleteProduct}
-                        onNewPrice={onNewPrice}
-
-                    />
-                ))
-            ) : (
-                <p>No hay nada para mostrar</p>
-            )}
-        </div>
-    );
+  return (
+    <div>
+      {productList.length > 0 ? (
+        productList.map((p) => (
+          <ProductItem
+            key={p.id}
+            product={p}
+            onDeleteProduct={onDeleteProduct}
+            onNewPrice={onNewPrice}
+          />
+        ))
+      ) : (
+        <p>No hay nada para mostrar</p>
+      )}
+    </div>
+  );
 };
 
 ProductList.propTypes = {
-    productList: PropTypes.array,
-    onDeleteProduct: PropTypes.func.isRequired,
-    onNewPrice: PropTypes.func.isRequired,
+  productList: PropTypes.array.isRequired,
+  onDeleteProduct: PropTypes.func.isRequired,
+  onNewPrice: PropTypes.func.isRequired,
+};
 
-}
-
-export default ProductList
+export default ProductList;

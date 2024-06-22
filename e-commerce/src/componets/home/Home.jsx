@@ -1,6 +1,6 @@
 import ProductList from "../productList/ProductList";
 import NewProduct from "../newProduct/NewProduct";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const Home = () => {
   const [product, setProduct] = useState([]);
@@ -29,7 +29,7 @@ const Home = () => {
   }, [reload]);
 
   //---------BORRAR PRODUCTO------------
-  const deleteProduct = useCallback(async (id) => {
+  const deleteProduct = async (id) => {
     try {
       const response = await fetch(`http://localhost:8000/products/${id}`, {
         method: "DELETE",
@@ -47,7 +47,7 @@ const Home = () => {
     } catch (error) {
       alert(error);
     }
-  }, []);
+  };
   //--------- AGRAGAR PRODUCTO---------------
   const saveProductDataHandler = async (enteredProductData) => {
     const productDto = {
@@ -117,7 +117,11 @@ const Home = () => {
 
   return (
     <div>
-      <NewProduct onProductDataSaved={saveProductDataHandler} />
+      {localStorage.getItem("logged_in_user") ? (
+        <NewProduct onProductDataSaved={saveProductDataHandler} />
+      ) : (
+        ""
+      )}
       <ProductList
         productList={product}
         onDeleteProduct={deleteProduct}
