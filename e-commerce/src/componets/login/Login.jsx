@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
@@ -11,6 +11,12 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (localStorage.getItem("logged_in_user")) {
+      navigate("/logout");
+    }
+  }, [navigate]);
 
   const handleUserChange = (event) => {
     setUsername(event.target.value);
