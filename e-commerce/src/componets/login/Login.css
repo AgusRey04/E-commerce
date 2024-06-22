@@ -1,12 +1,12 @@
-.card-log{
+.card-log {
     background-color: beige;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 20px;
- 
+
 }
 
-.input-lg{
+.input-lg {
     min-width: 300px;
 }

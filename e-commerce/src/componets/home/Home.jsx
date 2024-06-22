@@ -30,7 +30,6 @@ const Home = () => {
 
   //---------BORRAR PRODUCTO------------
   const deleteProduct = useCallback(async (id) => {
-
     try {
       const response = await fetch(`http://localhost:8000/products/${id}`, {
         method: "DELETE",
@@ -74,7 +73,7 @@ const Home = () => {
       if (!response.ok) {
         throw new Error("Error al agregar producto");
       } else {
-        console.log("Producto Agregado")
+        console.log("Producto Agregado");
       }
 
       const data = await response.json();
@@ -87,36 +86,43 @@ const Home = () => {
   };
   //------- EDITAR PRECIO DEL PRODUCTO---------
   const sumbitNewPrice = async (newPrice, product) => {
-    console.log("precio", newPrice)
-    console.log("id", product.id)
+    console.log("precio", newPrice);
+    console.log("id", product.id);
     const newPriceDto = {
       ...product,
-      price: newPrice
-    }
+      price: newPrice,
+    };
     try {
-      const response = await fetch(`http://localhost:8000/products/${product.id}`, {
-        method: "PUT",
-        mode: "cors",
-        headers: { "Content-Type": "application/json", },
-        body: JSON.stringify(newPriceDto),
-      });
+      const response = await fetch(
+        `http://localhost:8000/products/${product.id}`,
+        {
+          method: "PUT",
+          mode: "cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newPriceDto),
+        }
+      );
       if (!response.ok) {
-        throw new Error("Error al editar el producto")
+        throw new Error("Error al editar el producto");
       } else {
-        console.log("Precio actualizado")
+        console.log("Precio actualizado");
       }
       const data = await response.json();
       console.log(data);
     } catch (error) {
-      alert(error)
+      alert(error);
     }
     setReload(!reload);
-  }
+  };
 
   return (
     <div>
       <NewProduct onProductDataSaved={saveProductDataHandler} />
-      <ProductList productList={product} onDeleteProduct={deleteProduct} onNewPrice={sumbitNewPrice} />
+      <ProductList
+        productList={product}
+        onDeleteProduct={deleteProduct}
+        onNewPrice={sumbitNewPrice}
+      />
     </div>
   );
 };
