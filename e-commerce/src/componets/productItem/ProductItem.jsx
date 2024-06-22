@@ -39,7 +39,7 @@ const ProductItem = ({ product, onDeleteProduct, onNewPrice }) => {
           <Card.Title>{product.name}</Card.Title>
           <Card.Subtitle>{product.brand}</Card.Subtitle>
           <div>{product.type}</div>
-          {localStorage.getItem("logged_in_user") ?  
+          {localStorage.getItem("logged_in_user") ? (
             //LOGIN
             <div>
               {showForm ? (
@@ -54,7 +54,7 @@ const ProductItem = ({ product, onDeleteProduct, onNewPrice }) => {
                   <Button type="sumbit">Aceptar</Button>
                 </Form>
               ) : (
-                <p>{product.price}</p>
+                <p>${product.price}</p>
               )}
 
               {showForm ? (
@@ -67,12 +67,15 @@ const ProductItem = ({ product, onDeleteProduct, onNewPrice }) => {
                     Eliminar
                   </Button>
                 </div>
-              )}</div> :
-              //Logout
-              (
-                <Button className="btn btn-success">Agregar carrito</Button>)
-          }
-
+              )}
+            </div>
+          ) : (
+            //Logout
+            <div>
+              <p>${product.price}</p>
+              <Button className="btn btn-success">Agregar carrito</Button>
+            </div>
+          )}
         </Card.Body>
       </Card>
     </div>
