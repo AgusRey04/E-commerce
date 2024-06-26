@@ -322,7 +322,7 @@ const NewUser = () => {
 };
 
 NewUser.propTypes = {
-  onNewUserDataSaved: PropTypes.func.isRequired,
+  onNewUserDataSaved: PropTypes.func,
 };
 
 export default NewUser;
