@@ -6,6 +6,7 @@ import Login from "./componets/login/Login";
 import CartShop from "./componets/cartShop/CartShop";
 import ErrorPage from "./componets/errorPage/ErrorPage";
 import Logout from "./componets/logout/Logout";
+import NewUser from "./componets/newUser/NewUser";
 function App() {
   const router = createBrowserRouter([
     {
@@ -33,6 +34,14 @@ function App() {
       ),
     },
     {
+      path: "/register",
+      element: (
+        <MaiLayout>
+          <NewUser />
+        </MaiLayout>
+      ),
+    },
+    {
       path: "/cart",
       element: (
         <MaiLayout>
@@ -54,4 +63,3 @@ function App() {
 }
 
 export default App;
-

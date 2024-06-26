@@ -54,7 +54,6 @@ const Login = () => {
       console.error("Error al iniciar sesión:", error);
     }
   };
-
   return (
     <Card className="card-log">
       <Form>
@@ -92,10 +91,16 @@ const Login = () => {
           </Row>
         )}
         <Row className="mb-3">
-          <Button onClick={loginHandler}>Iniciar Sesión</Button>
+          <Button
+            disabled={password === "" || username === "" ? true : false}
+            type="button"
+            onClick={loginHandler}
+          >
+            Iniciar Sesión
+          </Button>
         </Row>
         <Row className="mb-3">
-          <Button type="button" onClick={() => navigate("/registerUser")}>
+          <Button type="button" onClick={() => navigate("/register")}>
             Registrarse
           </Button>
         </Row>

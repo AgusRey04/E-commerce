@@ -27,7 +27,7 @@ const Header = ({ onSearch }) => {
   const handleSearch = () => {
     onSearch(query);
   };
-
+  const dataUser = JSON.parse(localStorage.getItem("logged_in_user"));
   return (
     <Navbar expand="lg" className="bg-body-tertiary mb-3">
       <Container>
@@ -40,7 +40,11 @@ const Header = ({ onSearch }) => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link onClick={handleLoginNavigation}>Iniciar Sesión</Nav.Link>
+            <Nav.Link onClick={handleLoginNavigation}>
+              {!localStorage.getItem("logged_in_user")
+                ? "Iniciar Sesión"
+                : dataUser.firstName}
+            </Nav.Link>
             <Nav.Link onClick={handleCartNavigation}>Carrito</Nav.Link>
           </Nav>
           <Form className="d-flex" onSubmit={handleSearch}>
