@@ -9,6 +9,7 @@ const initialNewUserForm = {
   email: "",
   password: "",
   contfirmPassword: "",
+  rol: "user",
   phone: "",
   address: "",
   formValid: false,
@@ -147,6 +148,7 @@ const NewUser = () => {
         phone: newUserForm.phone,
         address: newUserForm.address,
         status: true,
+        rol: newUserForm.rol,
       };
 
       try {
