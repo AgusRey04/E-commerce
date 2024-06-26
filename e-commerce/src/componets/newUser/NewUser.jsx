@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { Card, Form, Row, Col, Button } from "react-bootstrap";
 
 const initialNewUserForm = {
-  id: 0,
   firstName: "",
   lastName: "",
   username: "",
@@ -11,7 +10,7 @@ const initialNewUserForm = {
   password: "",
   contfirmPassword: "",
   phone: "",
-  addres: "",
+  address: "",
   formValid: false,
 };
 
@@ -28,7 +27,7 @@ const newUserFormReducer = (state, action) => {
           state.email &&
           state.password &&
           state.phone &&
-          state.addres,
+          state.address,
       };
     case "LAST_NAME_UPDATE":
       return {
@@ -41,7 +40,7 @@ const newUserFormReducer = (state, action) => {
           state.email &&
           state.password &&
           state.phone &&
-          state.addres,
+          state.address,
       };
     case "USERNAME_UPDATE":
       return {
@@ -54,7 +53,7 @@ const newUserFormReducer = (state, action) => {
           state.email &&
           state.password &&
           state.phone &&
-          state.addres,
+          state.address,
       };
     case "EMAIL_UPDATE":
       return {
@@ -67,7 +66,7 @@ const newUserFormReducer = (state, action) => {
           state.username &&
           state.password &&
           state.phone &&
-          state.addres,
+          state.address,
       };
     case "PASSWORD_UPDATE":
       return {
@@ -80,7 +79,7 @@ const newUserFormReducer = (state, action) => {
           state.username &&
           state.email &&
           state.phone &&
-          state.addres,
+          state.address,
       };
     case "CONFIRM_PASSWORD_UPDATE":
       return {
@@ -93,7 +92,7 @@ const newUserFormReducer = (state, action) => {
           state.username &&
           state.email &&
           state.phone &&
-          state.addres,
+          state.address,
       };
     case "PHONE_UPDATE":
       return {
@@ -105,12 +104,12 @@ const newUserFormReducer = (state, action) => {
           state.lastName &&
           state.username &&
           state.email &&
-          state.addres,
+          state.address,
       };
     case "ADDRESS_UPDATE":
       return {
         ...state,
-        addres: action.value,
+        address: action.value,
         formValid:
           action.value &&
           state.firstName &&
@@ -122,8 +121,7 @@ const newUserFormReducer = (state, action) => {
       };
     case "RESET_FORM":
       return {
-        initialNewUserForm,
-        formValid: false,
+        ...initialNewUserForm,
       };
     default:
       return state;
@@ -136,59 +134,53 @@ const NewUser = () => {
     initialNewUserForm
   );
 
-  const submitProductHandler = (event) => {
+  const submitNewUserHandler = async (event) => {
     event.preventDefault();
-    console.log();
 
     if (newUserForm.password === newUserForm.contfirmPassword) {
       const userDto = {
-        id: 0,
         firstName: newUserForm.firstName,
         lastName: newUserForm.lastName,
         username: newUserForm.username,
         email: newUserForm.email,
         password: newUserForm.password,
         phone: newUserForm.phone,
-        addres: newUserForm.addres,
+        address: newUserForm.address,
         status: true,
       };
-      console.log(userDto);
 
-      apiPostUser(userDto);
-      dispatch({
-        type: "RESET_FORM",
-      });
+      try {
+        const response = await fetch("http://localhost:8000/register", {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userDto),
+        });
+
+        if (!response.ok) {
+          throw new Error("Error al agregar un usuario");
+        }
+
+        const data = await response.json();
+        console.log("Usuario Agregado:", data);
+        dispatch({
+          type: "RESET_FORM",
+        });
+      } catch (error) {
+        alert(error);
+      }
     } else {
       alert("Las contraseñas no coinciden");
     }
   };
 
-  const apiPostUser = async (userDto) => {
-    try {
-      const response = await fetch("http://localhost:8000/users", {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userDto),
-      });
-      if (!response.ok) {
-        throw new Error("Error al agregar un usuiario");
-      } else {
-        console.log("Usuario Agregado");
-        console.log(data);
-      }
-      const data = await response.json();
-    } catch (error) {
-      alert(error);
-    }
-  };
   return (
     <>
       <Card style={{ width: "50rem" }}>
         <Card.Body>
-          <Form onSubmit={submitProductHandler}>
+          <Form onSubmit={submitNewUserHandler}>
             <Row className="mb-3">
               <Col>
                 <Form.Label>Nombre</Form.Label>
@@ -220,89 +212,98 @@ const NewUser = () => {
               </Col>
             </Row>
             <Row className="mb-3">
-              <Form.Label>Usuario</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder=" Ingresar usuario..."
-                value={newUserForm.username}
-                onChange={(e) =>
-                  dispatch({
-                    type: "USERNAME_UPDATE",
-                    value: e.target.value,
-                  })
-                }
-              />
+              <Col>
+                <Form.Label>Usuario</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder=" Ingresar usuario..."
+                  value={newUserForm.username}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "USERNAME_UPDATE",
+                      value: e.target.value,
+                    })
+                  }
+                />
+              </Col>
             </Row>
             <Row className="mb-3">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                placeholder=" Ingresar email..."
-                value={newUserForm.email}
-                onChange={(e) =>
-                  dispatch({
-                    type: "EMAIL_UPDATE",
-                    value: e.target.value,
-                  })
-                }
-              />
+              <Col>
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder=" Ingresar email..."
+                  value={newUserForm.email}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "EMAIL_UPDATE",
+                      value: e.target.value,
+                    })
+                  }
+                />
+              </Col>
             </Row>
             <Row className="mb-3">
-              <Form.Label>Contraseña</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder=" Ingresar contraseña..."
-                value={newUserForm.password}
-                onChange={(e) =>
-                  dispatch({
-                    type: "PASSWORD_UPDATE",
-                    value: e.target.value,
-                  })
-                }
-              />
+              <Col>
+                <Form.Label>Contraseña</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder=" Ingresar contraseña..."
+                  value={newUserForm.password}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "PASSWORD_UPDATE",
+                      value: e.target.value,
+                    })
+                  }
+                />
+              </Col>
+              <Col>
+                <Form.Label>Confirmar Contraseña</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder=" Confirmar contraseña..."
+                  value={newUserForm.contfirmPassword}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "CONFIRM_PASSWORD_UPDATE",
+                      value: e.target.value,
+                    })
+                  }
+                />
+              </Col>
             </Row>
             <Row className="mb-3">
-              <Form.Label>Confirmar Contraseña</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder=" Confirmar contraseña..."
-                value={newUserForm.contfirmPassword}
-                onChange={(e) =>
-                  dispatch({
-                    type: "CONFIRM_PASSWORD_UPDATE",
-                    value: e.target.value,
-                  })
-                }
-              />
+              <Col>
+                <Form.Label>Teléfono</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder=" Ingresar teléfono..."
+                  value={newUserForm.phone}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "PHONE_UPDATE",
+                      value: e.target.value,
+                    })
+                  }
+                />
+              </Col>
             </Row>
             <Row className="mb-3">
-              <Form.Label>Teléfono</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder=" Ingresar teléfono..."
-                value={newUserForm.phone}
-                onChange={(e) =>
-                  dispatch({
-                    type: "PHONE_UPDATE",
-                    value: e.target.value,
-                  })
-                }
-              />
-            </Row>
-
-            <Row className="mb-3">
-              <Form.Label>Dirección</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder=" Ingresar dirección..."
-                value={newUserForm.addres}
-                onChange={(e) =>
-                  dispatch({
-                    type: "ADDRESS_UPDATE",
-                    value: e.target.value,
-                  })
-                }
-              />
+              <Col>
+                <Form.Label>Dirección</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder=" Ingresar dirección..."
+                  value={newUserForm.address}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "ADDRESS_UPDATE",
+                      value: e.target.value,
+                    })
+                  }
+                />
+              </Col>
             </Row>
             <Button
               variant="primary"
@@ -321,4 +322,5 @@ const NewUser = () => {
 NewUser.propTypes = {
   onNewUserDataSaved: PropTypes.func.isRequired,
 };
+
 export default NewUser;
