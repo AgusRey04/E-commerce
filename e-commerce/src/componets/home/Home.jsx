@@ -1,11 +1,10 @@
 import ProductList from "../productList/ProductList";
 import NewProduct from "../newProduct/NewProduct";
 import { useEffect, useState } from "react";
-
-const Home = () => {
+import PropTypes from "prop-types";
+const Home = ({ onloggedInUser }) => {
   const [product, setProduct] = useState([]);
   const [reload, setReload] = useState(true);
-
   //------PEDIDO DE LISTA DE PRODUCTOS
 
   useEffect(() => {
@@ -117,7 +116,7 @@ const Home = () => {
 
   return (
     <div>
-      {localStorage.getItem("logged_in_user") ? (
+      {onloggedInUser ? (
         <NewProduct onProductDataSaved={saveProductDataHandler} />
       ) : (
         ""
@@ -131,6 +130,8 @@ const Home = () => {
   );
 };
 
-Home.propTypes = {};
+Home.propTypes = {
+  onloggedInUser: PropTypes.func,
+};
 
 export default Home;

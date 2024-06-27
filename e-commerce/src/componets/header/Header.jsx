@@ -10,16 +10,18 @@ import {
 } from "react-bootstrap";
 import { useState } from "react";
 
-const Header = ({ onSearch }) => {
+const Header = ({ onSearch, loggedInUser }) => {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
 
   const handleHomeNavigation = () => {
     navigate("/");
   };
+
   const handleLoginNavigation = () => {
     navigate("/login");
   };
+
   const handleCartNavigation = () => {
     navigate("/cart");
   };
@@ -27,7 +29,7 @@ const Header = ({ onSearch }) => {
   const handleSearch = () => {
     onSearch(query);
   };
-  const dataUser = JSON.parse(localStorage.getItem("logged_in_user"));
+
   return (
     <Navbar expand="lg" className="bg-body-tertiary mb-3">
       <Container>
@@ -41,9 +43,7 @@ const Header = ({ onSearch }) => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link onClick={handleLoginNavigation}>
-              {!localStorage.getItem("logged_in_user")
-                ? "Iniciar Sesión"
-                : dataUser.firstName}
+              {!loggedInUser ? "Iniciar Sesión" : loggedInUser.firstName}
             </Nav.Link>
             <Nav.Link onClick={handleCartNavigation}>Carrito</Nav.Link>
           </Nav>
@@ -56,7 +56,9 @@ const Header = ({ onSearch }) => {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
-            <Button variant="outline-success">Buscar</Button>
+            <Button variant="outline-success" type="submit">
+              Buscar
+            </Button>
           </Form>
         </Navbar.Collapse>
       </Container>
@@ -66,6 +68,7 @@ const Header = ({ onSearch }) => {
 
 Header.propTypes = {
   onSearch: PropTypes.func,
+  loggedInUser: PropTypes.object,
 };
 
 export default Header;

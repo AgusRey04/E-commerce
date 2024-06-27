@@ -7,36 +7,56 @@ import CartShop from "./componets/cartShop/CartShop";
 import ErrorPage from "./componets/errorPage/ErrorPage";
 import Logout from "./componets/logout/Logout";
 import NewUser from "./componets/newUser/NewUser";
+import { useState } from "react";
+import { useEffect } from "react";
 function App() {
+  const [loggedInUser, setLoggedInUser] = useState(null);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("logged_in_user"));
+    if (user) {
+      setLoggedInUser(user);
+    }
+  }, []);
+
+  const updateUser = (userData) => {
+    localStorage.setItem("logged_in_user", JSON.stringify(userData));
+    setLoggedInUser(userData);
+  };
+  const logout = () => {
+    localStorage.removeItem("logged_in_user");
+    setLoggedInUser(null);
+  };
+
   const router = createBrowserRouter([
     {
       path: "/",
       element: (
-        <MaiLayout>
-          <Home />
+        <MaiLayout loggedInUser={loggedInUser}>
+          <Home onloggedInUser={loggedInUser} />
         </MaiLayout>
       ),
     },
     {
       path: "/login",
       element: (
-        <MaiLayout>
-          <Login />
+        <MaiLayout loggedInUser={loggedInUser}>
+          <Login onUpdateUser={updateUser} loggedInUser={loggedInUser} />
         </MaiLayout>
       ),
     },
     {
       path: "/Logout",
       element: (
-        <MaiLayout>
-          <Logout />
+        <MaiLayout loggedInUser={loggedInUser}>
+          <Logout onLogout={logout} loggedInUser={loggedInUser} />
         </MaiLayout>
       ),
     },
     {
       path: "/register",
       element: (
-        <MaiLayout>
+        <MaiLayout loggedInUser={loggedInUser}>
           <NewUser />
         </MaiLayout>
       ),
@@ -44,7 +64,7 @@ function App() {
     {
       path: "/cart",
       element: (
-        <MaiLayout>
+        <MaiLayout loggedInUser={loggedInUser}>
           <CartShop />
         </MaiLayout>
       ),

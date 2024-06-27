@@ -1,29 +1,33 @@
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
-const Logout = () => {
+import PropTypes from "prop-types";
+const Logout = ({ onLogout, loggedInUser }) => {
   const navigate = useNavigate();
   const logoutHandler = () => {
-    // Elimina los tokens de acceso y de refresco al cerrar sesión
-    localStorage.removeItem("logged_in_user");
+    onLogout(); // Llama a la función de cierre de sesión
     navigate("/login");
   };
-  const dataUser = JSON.parse(localStorage.getItem("logged_in_user"));
-  console.log(dataUser);
+
   return (
     <>
       <Form>
         <h2>Datos Personales</h2>
-        <Form.Group>Nombre: {dataUser.firstName}</Form.Group>
-        <Form.Group>Apellido: {dataUser.lastName}</Form.Group>
-        <Form.Group>Email: {dataUser.email} </Form.Group>
-        <Form.Group>Telefono: {dataUser.phone}</Form.Group>
-        <Form.Group>Direccion: {dataUser.addres}</Form.Group>
+        <Form.Group>Nombre: {loggedInUser.firstName}</Form.Group>
+        <Form.Group>Apellido: {loggedInUser.lastName}</Form.Group>
+        <Form.Group>Email: {loggedInUser.email} </Form.Group>
+        <Form.Group>Telefono: {loggedInUser.phone}</Form.Group>
+        <Form.Group>Direccion: {loggedInUser.addres}</Form.Group>
       </Form>
 
       <Button onClick={logoutHandler}>Cerrar Sesión</Button>
     </>
   );
+};
+
+Logout.propTypes = {
+  onLogout: PropTypes.func,
+  loggedInUser: PropTypes.object,
 };
 
 export default Logout;

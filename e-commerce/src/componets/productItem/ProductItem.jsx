@@ -1,33 +1,41 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Card, Form } from "react-bootstrap";
 
 const ProductItem = ({ product, onDeleteProduct, onNewPrice }) => {
-  const [showForm, setShowform] = useState(false);
-  const [newPrice, setNewPrice] = useState();
+  const [showForm, setShowForm] = useState(false);
+  const [newPrice, setNewPrice] = useState("");
+  const [userRol, setUserRol] = useState(false); // Inicialmente false
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("logged_in_user"));
+    if (user && user.rol === "admin") {
+      setUserRol(true);
+    } else {
+      setUserRol(false);
+    }
+  }, []);
 
   const deleteProduct = () => {
     onDeleteProduct(product.id);
   };
 
   const editPriceProduct = () => {
-    setShowform(true);
+    setShowForm(true);
   };
 
   const handleNewPrice = (e) => {
     setNewPrice(e.target.value);
   };
-  const sumbitNewPrice = (e) => {
+
+  const submitNewPrice = (e) => {
     e.preventDefault();
     if (newPrice > 0) {
-      console.log(product, newPrice);
       onNewPrice(newPrice, product);
-      setShowform(false);
+      setShowForm(false);
       setNewPrice("");
     } else {
       alert("El valor ingresado debe ser mayor a 0");
-      setShowform(false);
-      setNewPrice("");
     }
   };
 
@@ -39,19 +47,19 @@ const ProductItem = ({ product, onDeleteProduct, onNewPrice }) => {
           <Card.Title>{product.name}</Card.Title>
           <Card.Subtitle>{product.brand}</Card.Subtitle>
           <div>{product.type}</div>
-          {localStorage.getItem("logged_in_user") ? (
-            //LOGIN
+          {userRol ? (
+            // Mostrar opciones para admin
             <div>
               {showForm ? (
-                <Form onSubmit={sumbitNewPrice}>
+                <Form onSubmit={submitNewPrice}>
                   <Form.Label>Nuevo Precio</Form.Label>
                   <Form.Control
                     type="number"
                     placeholder="Ingrese el nuevo valor del producto"
-                    onChange={handleNewPrice}
                     value={newPrice}
+                    onChange={handleNewPrice}
                   />
-                  <Button type="sumbit">Aceptar</Button>
+                  <Button type="submit">Aceptar</Button>
                 </Form>
               ) : (
                 <p>${product.price}</p>
@@ -61,7 +69,9 @@ const ProductItem = ({ product, onDeleteProduct, onNewPrice }) => {
                 ""
               ) : (
                 <div>
-                  <Button className="btn btn-success">Agregar carrito</Button>
+                  <Button className="btn btn-success">
+                    Agregar al carrito
+                  </Button>
                   <Button onClick={editPriceProduct}>Cambiar precio</Button>
                   <Button className="btn btn-danger" onClick={deleteProduct}>
                     Eliminar
@@ -70,10 +80,9 @@ const ProductItem = ({ product, onDeleteProduct, onNewPrice }) => {
               )}
             </div>
           ) : (
-            //Logout
             <div>
               <p>${product.price}</p>
-              <Button className="btn btn-success">Agregar carrito</Button>
+              <Button className="btn btn-success">Agregar al carrito</Button>
             </div>
           )}
         </Card.Body>
@@ -83,7 +92,7 @@ const ProductItem = ({ product, onDeleteProduct, onNewPrice }) => {
 };
 
 ProductItem.propTypes = {
-  product: PropTypes.object,
+  product: PropTypes.object.isRequired,
   onDeleteProduct: PropTypes.func.isRequired,
   onNewPrice: PropTypes.func.isRequired,
 };
