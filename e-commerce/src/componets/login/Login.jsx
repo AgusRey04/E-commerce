@@ -5,8 +5,10 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import "./Login.css";
+import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-const Login = () => {
+
+const Login = ({ onUpdateUser }) => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -38,9 +40,7 @@ const Login = () => {
 
       if (response.ok) {
         const userData = await response.json();
-        localStorage.setItem("logged_in_user", JSON.stringify(userData));
-
-        console.log("Datos del usuario autenticado:", userData);
+        onUpdateUser(userData);
         navigate("/");
       } else {
         // Error de autenticación
@@ -109,4 +109,7 @@ const Login = () => {
   );
 };
 
+Login.propTypes = {
+  onUpdateUser: PropTypes.func,
+};
 export default Login;

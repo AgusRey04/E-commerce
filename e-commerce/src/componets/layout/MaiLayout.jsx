@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
 import Header from "../header/Header";
 
-const MaiLayout = ({ children }) => {
+const MaiLayout = ({ children, loggedInUser }) => {
   return (
     <>
-      <Header />
+      <Header loggedInUser={loggedInUser} />
       {children}
     </>
   );
@@ -12,6 +12,7 @@ const MaiLayout = ({ children }) => {
 
 MaiLayout.propTypes = {
   children: PropTypes.node.isRequired,
+  loggedInUser: PropTypes.func.isRequired,
 };
 
 export default MaiLayout;
