@@ -6,13 +6,19 @@ import Login from "./componets/login/Login";
 import CartShop from "./componets/cartShop/CartShop";
 import ErrorPage from "./componets/errorPage/ErrorPage";
 import Logout from "./componets/logout/Logout";
+import { useState } from "react";
 function App() {
+  const [search, setSearch] = useState()
+  const handleSearch = (searchTerm) => {
+    setSearch(searchTerm)
+  }
+
   const router = createBrowserRouter([
     {
       path: "/",
       element: (
-        <MaiLayout>
-          <Home />
+        <MaiLayout onSearch={handleSearch}>
+          <Home search={search} />
         </MaiLayout>
       ),
     },

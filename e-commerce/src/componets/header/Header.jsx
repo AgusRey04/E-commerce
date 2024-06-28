@@ -24,7 +24,8 @@ const Header = ({ onSearch }) => {
     navigate("/cart");
   };
 
-  const handleSearch = () => {
+  const handleSearch = (e) => {
+    e.preventDefault();
     onSearch(query);
   };
 
@@ -52,7 +53,7 @@ const Header = ({ onSearch }) => {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
-            <Button variant="outline-success">Buscar</Button>
+            <Button variant="outline-success" type="submit">Buscar</Button>
           </Form>
         </Navbar.Collapse>
       </Container>

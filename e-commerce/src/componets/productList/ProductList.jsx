@@ -4,6 +4,9 @@ import ProductItem from '../productItem/ProductItem'
 
 
 const ProductList = ({ productList, onDeleteProduct, onNewPrice }) => {
+    if (!productList || !Array.isArray(productList)) {
+        return <p>No hay productos disponibles</p>;
+      }
 
     return (
         <div>
@@ -25,7 +28,7 @@ const ProductList = ({ productList, onDeleteProduct, onNewPrice }) => {
 };
 
 ProductList.propTypes = {
-    productList: PropTypes.array,
+    productList: PropTypes.array.isRequired,
     onDeleteProduct: PropTypes.func.isRequired,
     onNewPrice: PropTypes.func.isRequired,
 

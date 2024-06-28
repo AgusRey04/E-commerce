@@ -1,11 +1,11 @@
-import React from "react";
+
 import PropTypes from "prop-types";
 import Header from "../header/Header";
 
-const MaiLayout = ({ children }) => {
+const MaiLayout = ({ children, onSearch }) => {
   return (
     <>
-      <Header />
+      <Header onSearch={onSearch} />
       {children}
     </>
   );
@@ -13,6 +13,7 @@ const MaiLayout = ({ children }) => {
 
 MaiLayout.propTypes = {
   children: PropTypes.node.isRequired,
+  onSearch: PropTypes.func.isRequired,
 };
 
 export default MaiLayout;
