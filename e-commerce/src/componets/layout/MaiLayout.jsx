@@ -11,8 +11,8 @@ const MaiLayout = ({ children, loggedInUser }) => {
 };
 
 MaiLayout.propTypes = {
-  children: PropTypes.node.isRequired,
-  loggedInUser: PropTypes.func.isRequired,
+  children: PropTypes.node,
+  loggedInUser: PropTypes.object,
 };
 
 export default MaiLayout;

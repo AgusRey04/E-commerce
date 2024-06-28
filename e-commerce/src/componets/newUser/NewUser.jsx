@@ -1,7 +1,7 @@
 import { useReducer, useState } from "react";
 import PropTypes from "prop-types";
 import { Card, Form, Row, Col, Button, Alert } from "react-bootstrap";
-
+import "./NewUser.css";
 const initialNewUserForm = {
   firstName: "",
   lastName: "",
@@ -227,7 +227,7 @@ const NewUser = ({ onNewUserDataSaved }) => {
   };
 
   return (
-    <Card style={{ width: "50rem" }}>
+    <Card className="card-newuser " style={{ width: "50rem" }}>
       <Card.Body>
         <Form onSubmit={submitNewUserHandler}>
           <Row className="mb-3">
