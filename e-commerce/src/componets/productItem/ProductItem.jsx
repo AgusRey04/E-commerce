@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { Button, Card, Form } from "react-bootstrap";
-
+import "./ProductItem.css";
 const ProductItem = ({ product, onDeleteProduct, onNewPrice }) => {
   const [showForm, setShowForm] = useState(false);
   const [newPrice, setNewPrice] = useState("");
@@ -40,54 +40,50 @@ const ProductItem = ({ product, onDeleteProduct, onNewPrice }) => {
   };
 
   return (
-    <div>
-      <Card className="card border-info mb-3">
-        <Card.Img height={300} variant="top" src={product.img} />
-        <Card.Body>
-          <Card.Title>{product.name}</Card.Title>
-          <Card.Subtitle>{product.brand}</Card.Subtitle>
-          <div>{product.type}</div>
-          {userRol ? (
-            // Mostrar opciones para admin
-            <div>
-              {showForm ? (
-                <Form onSubmit={submitNewPrice}>
-                  <Form.Label>Nuevo Precio</Form.Label>
-                  <Form.Control
-                    type="number"
-                    placeholder="Ingrese el nuevo valor del producto"
-                    value={newPrice}
-                    onChange={handleNewPrice}
-                  />
-                  <Button type="submit">Aceptar</Button>
-                </Form>
-              ) : (
-                <p>${product.price}</p>
-              )}
-
-              {showForm ? (
-                ""
-              ) : (
-                <div>
-                  <Button className="btn btn-success">
-                    Agregar al carrito
-                  </Button>
-                  <Button onClick={editPriceProduct}>Cambiar precio</Button>
-                  <Button className="btn btn-danger" onClick={deleteProduct}>
-                    Eliminar
-                  </Button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div>
+    <Card className="card  mb-3 card-productItem">
+      <Card.Img height={300} width={300} variant="top" src={product.img} />
+      <Card.Body>
+        <Card.Title>{product.name}</Card.Title>
+        <Card.Subtitle>{product.brand}</Card.Subtitle>
+        <div>{product.type}</div>
+        {userRol ? (
+          // Mostrar opciones para admin
+          <div>
+            {showForm ? (
+              <Form onSubmit={submitNewPrice}>
+                <Form.Label>Nuevo Precio</Form.Label>
+                <Form.Control
+                  type="number"
+                  placeholder="Ingrese el nuevo valor del producto"
+                  value={newPrice}
+                  onChange={handleNewPrice}
+                />
+                <Button type="submit">Aceptar</Button>
+              </Form>
+            ) : (
               <p>${product.price}</p>
-              <Button className="btn btn-success">Agregar al carrito</Button>
-            </div>
-          )}
-        </Card.Body>
-      </Card>
-    </div>
+            )}
+
+            {showForm ? (
+              ""
+            ) : (
+              <div>
+                <Button className="btn btn-success">Agregar al carrito</Button>
+                <Button onClick={editPriceProduct}>Cambiar precio</Button>
+                <Button className="btn btn-danger" onClick={deleteProduct}>
+                  Eliminar
+                </Button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div>
+            <p>${product.price}</p>
+            <Button className="btn btn-success">Agregar al carrito</Button>
+          </div>
+        )}
+      </Card.Body>
+    </Card>
   );
 };
 

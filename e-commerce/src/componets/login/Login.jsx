@@ -1,18 +1,22 @@
-import { useEffect, useState } from "react";
-import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import "./Login.css";
+import { useEffect, useState, useRef } from "react";
+import { Button, Card, Form, Row, Alert } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
+import "./Login.css";
 
 const Login = ({ onUpdateUser }) => {
   const navigate = useNavigate();
+  const [errors, setErrors] = useState({
+    username: false,
+    password: false,
+    exist: false,
+    notFunction: false,
+  });
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+
+  const usernameRef = useRef(null);
+  const passwordRef = useRef(null);
 
   useEffect(() => {
     if (localStorage.getItem("logged_in_user")) {
@@ -20,15 +24,48 @@ const Login = ({ onUpdateUser }) => {
     }
   }, [navigate]);
 
-  const handleUserChange = (event) => {
-    setUsername(event.target.value);
+  const handleSubmit = () => {
+    setErrors({
+      username: false,
+      password: false,
+      exist: false,
+      notFunction: false,
+    });
+    if (!passwordRef.current.value && !usernameRef.current.value) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        password: true,
+        username: true,
+      }));
+      return;
+    }
+
+    if (!passwordRef.current.value) {
+      passwordRef.current.focus();
+      setErrors((prevErrors) => ({ ...prevErrors, password: true }));
+      return;
+    }
+    if (!usernameRef.current.value) {
+      usernameRef.current.focus();
+      setErrors((prevErrors) => ({ ...prevErrors, username: true }));
+      return;
+    }
+
+    loginHandler(usernameRef.current.value, passwordRef.current.value);
+    setErrors((prevErrors) => ({ ...prevErrors, exist: false }));
   };
 
-  const handlePasswordChange = (event) => {
+  const changeUsernameHandler = () => {
+    setErrors((prevErrors) => ({ ...prevErrors, username: false }));
+    setUsername(usernameRef.current.value);
+  };
+
+  const changePasswordHandler = (event) => {
+    setErrors((prevErrors) => ({ ...prevErrors, password: false }));
     setPassword(event.target.value);
   };
 
-  const loginHandler = async () => {
+  const loginHandler = async (username, password) => {
     try {
       const response = await fetch("http://localhost:8000/login", {
         method: "POST",
@@ -43,59 +80,71 @@ const Login = ({ onUpdateUser }) => {
         onUpdateUser(userData);
         navigate("/");
       } else {
-        // Error de autenticación
-        setError("Usuario o contraseña incorrectos");
+        setErrors((prevErrors) => ({ ...prevErrors, exist: true }));
       }
     } catch (error) {
-      // Error de red o del servidor
-      setError(
-        "Error al iniciar sesión. Por favor, inténtalo de nuevo más tarde"
-      );
       console.error("Error al iniciar sesión:", error);
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        notFunction: true,
+      }));
     }
   };
+
   return (
     <Card className="card-log">
       <Form>
         <Row className="mb-3">
-          <Form.Group as={Col} md="4" controlId="validationCustom01">
+          <Form.Group md="4" controlId="validationCustom01">
             <Form.Label>Usuario</Form.Label>
             <Form.Control
               required
               type="text"
               placeholder="Ingrese el usuario..."
-              value={username}
-              onChange={handleUserChange}
               className="input-lg"
+              ref={usernameRef}
+              value={username}
+              onChange={changeUsernameHandler}
             />
+            {errors.username && (
+              <Alert variant="danger">El usuario es requerido.</Alert>
+            )}
           </Form.Group>
         </Row>
         <Row className="mb-3">
-          <Form.Group as={Col} md="4" controlId="validationCustom02">
+          <Form.Group md="4" controlId="validationCustom02">
             <Form.Label>Contraseña</Form.Label>
             <Form.Control
               required
               type="password"
               placeholder="Ingrese la contraseña..."
-              value={password}
-              onChange={handlePasswordChange}
               className="input-lg"
+              value={password}
+              ref={passwordRef}
+              onChange={changePasswordHandler}
             />
+            {errors.password && (
+              <Alert variant="danger">La contraseña es requerida.</Alert>
+            )}
           </Form.Group>
         </Row>
-        {error && (
+
+        {errors.exist && (
+          <div className="mt-3 mb-3">
+            <Alert variant="danger">
+              El usuario o la contraseña es incorrecto.
+            </Alert>
+          </div>
+        )}
+        {errors.notFunction && (
           <Row className="mb-3">
-            <Col md="4">
-              <div className="error-message">{error}</div>
-            </Col>
+            <Alert variant="danger">
+              Error al iniciar sesión. Por favor, inténtalo de nuevo más tarde.
+            </Alert>
           </Row>
         )}
         <Row className="mb-3">
-          <Button
-            disabled={password === "" || username === "" ? true : false}
-            type="button"
-            onClick={loginHandler}
-          >
+          <Button type="button" onClick={handleSubmit}>
             Iniciar Sesión
           </Button>
         </Row>
@@ -110,6 +159,7 @@ const Login = ({ onUpdateUser }) => {
 };
 
 Login.propTypes = {
-  onUpdateUser: PropTypes.func,
+  onUpdateUser: PropTypes.func.isRequired,
 };
+
 export default Login;

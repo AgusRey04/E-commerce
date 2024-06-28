@@ -116,7 +116,7 @@ const Home = ({ onloggedInUser }) => {
 
   return (
     <div>
-      {onloggedInUser ? (
+      {onloggedInUser && onloggedInUser.rol === "admin" ? (
         <NewProduct onProductDataSaved={saveProductDataHandler} />
       ) : (
         ""
@@ -131,7 +131,7 @@ const Home = ({ onloggedInUser }) => {
 };
 
 Home.propTypes = {
-  onloggedInUser: PropTypes.func,
+  onloggedInUser: PropTypes.object,
 };
 
 export default Home;

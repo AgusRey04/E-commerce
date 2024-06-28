@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
 import ProductItem from "../productItem/ProductItem";
-
+import "../productList/ProductList.css";
 const ProductList = ({ productList, onDeleteProduct, onNewPrice }) => {
   return (
-    <div>
+    <div className="intenti">
       {productList.length > 0 ? (
         productList.map((p) => (
           <ProductItem
