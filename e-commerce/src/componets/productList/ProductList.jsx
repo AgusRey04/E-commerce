@@ -1,15 +1,14 @@
-
-import PropTypes from 'prop-types'
-import ProductItem from '../productItem/ProductItem'
-
-
+import PropTypes from "prop-types";
+import ProductItem from "../productItem/ProductItem";
+import "../productList/ProductList.css";
 const ProductList = ({ productList, onDeleteProduct, onNewPrice }) => {
+
     if (!productList || !Array.isArray(productList)) {
         return <p>No hay productos disponibles</p>;
     }
 
     return (
-        <div>
+        <div className="intenti>
             {productList.length > 0 ? (
                 productList.map((p) => (
                     <ProductItem
@@ -34,4 +33,6 @@ ProductList.propTypes = {
 
 }
 
-export default ProductList
+
+
+export default ProductList;

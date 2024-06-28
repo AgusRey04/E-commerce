@@ -10,16 +10,18 @@ import {
 } from "react-bootstrap";
 import { useState } from "react";
 
-const Header = ({ onSearch }) => {
+const Header = ({ onSearch, loggedInUser }) => {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
 
   const handleHomeNavigation = () => {
     navigate("/");
   };
+
   const handleLoginNavigation = () => {
     navigate("/login");
   };
+
   const handleCartNavigation = () => {
     navigate("/cart");
   };
@@ -42,7 +44,9 @@ const Header = ({ onSearch }) => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link onClick={handleLoginNavigation}>Iniciar Sesión</Nav.Link>
+            <Nav.Link onClick={handleLoginNavigation}>
+              {!loggedInUser ? "Iniciar Sesión" : loggedInUser.firstName}
+            </Nav.Link>
             <Nav.Link onClick={handleCartNavigation}>Carrito</Nav.Link>
           </Nav>
           <Form className="d-flex" onSubmit={handleSearch}>
@@ -54,7 +58,11 @@ const Header = ({ onSearch }) => {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
-            <Button variant="outline-success" type="submit">Buscar</Button>
+
+            <Button variant="outline-success" type="submit">
+              Buscar
+            </Button>
+
           </Form>
         </Navbar.Collapse>
       </Container>
@@ -64,6 +72,7 @@ const Header = ({ onSearch }) => {
 
 Header.propTypes = {
   onSearch: PropTypes.func,
+  loggedInUser: PropTypes.object,
 };
 
 export default Header;

@@ -3,10 +3,15 @@ import NewProduct from "../newProduct/NewProduct";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
+
 const Home = ({ search }) => {
+
+const Home = ({ onloggedInUser,search }) => {
+
   const [product, setProduct] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState()
   const [reload, setReload] = useState(true);
+
 
   //------FILTRO-----
 
@@ -67,7 +72,8 @@ const Home = ({ search }) => {
     } catch (error) {
       alert(error);
     }
-  }
+
+  };
 
   //--------- AGRAGAR PRODUCTO---------------
 
@@ -142,7 +148,11 @@ const Home = ({ search }) => {
 
   return (
     <div>
-      <NewProduct onProductDataSaved={saveProductDataHandler} />
+      {onloggedInUser && onloggedInUser.rol === "admin" ? (
+        <NewProduct onProductDataSaved={saveProductDataHandler} />
+      ) : (
+        ""
+      )}
       <ProductList
         productList={filteredProducts}
         onDeleteProduct={deleteProduct}
@@ -154,6 +164,7 @@ const Home = ({ search }) => {
 
 Home.propTypes = {
   search: PropTypes.string
+  onloggedInUser: PropTypes.object,
 };
 
 export default Home;
