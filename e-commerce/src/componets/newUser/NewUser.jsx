@@ -1,6 +1,6 @@
 import { useReducer, useState } from "react";
 import PropTypes from "prop-types";
-import { useNavigate } from "react-router-dom"; // Importa el hook useNavigate
+import { useNavigate } from "react-router-dom";
 import { Card, Form, Row, Col, Button, Alert } from "react-bootstrap";
 import "./NewUser.css";
 
@@ -48,7 +48,7 @@ const NewUser = ({ onNewUserDataSaved }) => {
     exist: false,
     serverError: false,
   });
-  const navigate = useNavigate(); // Hook para redirección
+  const navigate = useNavigate();
 
   const submitNewUserHandler = async (event) => {
     event.preventDefault();
@@ -127,7 +127,6 @@ const NewUser = ({ onNewUserDataSaved }) => {
           dispatch({ type: "RESET_FORM" });
           navigate("/login");
           onNewUserDataSaved(data);
-          alert("El usuario se agregó correctamente"); // Mostrar alerta de éxito al registrar de nuevo
         }
       } catch (error) {
         console.log("Error al agregar un usuario:", error);
