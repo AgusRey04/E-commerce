@@ -1,25 +1,22 @@
 import { useEffect, useState, useRef } from "react";
-import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-
-import Alert from "react-bootstrap/Alert";
-import "./Login.css";
+import { Button, Card, Form, Row, Alert } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
+import "./Login.css";
 
 const Login = ({ onUpdateUser }) => {
   const navigate = useNavigate();
-  const [errors, setError] = useState({
+  const [errors, setErrors] = useState({
     username: false,
     password: false,
     exist: false,
     notFunction: false,
   });
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-  const usernameRef = useRef(false);
-  const passwordRef = useRef(false);
+  const usernameRef = useRef(null);
+  const passwordRef = useRef(null);
 
   useEffect(() => {
     if (localStorage.getItem("logged_in_user")) {
@@ -28,26 +25,46 @@ const Login = ({ onUpdateUser }) => {
   }, [navigate]);
 
   const handleSubmit = () => {
-    const newErrors = {
-      username: !usernameRef.current.value,
-      password: !passwordRef.current.value,
+    setErrors({
+      username: false,
+      password: false,
       exist: false,
       notFunction: false,
-    };
-
-    setError(newErrors);
-
-    if (passwordRef.current.value && usernameRef.current.value) {
-      loginHandler(passwordRef.current.value, usernameRef.current.value);
+    });
+    if (!passwordRef.current.value && !usernameRef.current.value) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        password: true,
+        username: true,
+      }));
+      return;
     }
+
+    if (!passwordRef.current.value) {
+      passwordRef.current.focus();
+      setErrors((prevErrors) => ({ ...prevErrors, password: true }));
+      return;
+    }
+    if (!usernameRef.current.value) {
+      usernameRef.current.focus();
+      setErrors((prevErrors) => ({ ...prevErrors, username: true }));
+      return;
+    }
+
+    loginHandler(usernameRef.current.value, passwordRef.current.value);
+    setErrors((prevErrors) => ({ ...prevErrors, exist: false }));
   };
 
   const changeUsernameHandler = () => {
-    setError((prevErrors) => ({ ...prevErrors, username: false }));
+    setErrors((prevErrors) => ({ ...prevErrors, username: false }));
+    setUsername(usernameRef.current.value);
   };
-  const changePasswordHandler = () => {
-    setError((prevErrors) => ({ ...prevErrors, password: false }));
+
+  const changePasswordHandler = (event) => {
+    setErrors((prevErrors) => ({ ...prevErrors, password: false }));
+    setPassword(event.target.value);
   };
+
   const loginHandler = async (username, password) => {
     try {
       const response = await fetch("http://localhost:8000/login", {
@@ -63,11 +80,11 @@ const Login = ({ onUpdateUser }) => {
         onUpdateUser(userData);
         navigate("/");
       } else {
-        setError((prevErrors) => ({ ...prevErrors, exist: true }));
+        setErrors((prevErrors) => ({ ...prevErrors, exist: true }));
       }
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
-      setError((prevErrors) => ({
+      setErrors((prevErrors) => ({
         ...prevErrors,
         notFunction: true,
       }));
@@ -86,6 +103,7 @@ const Login = ({ onUpdateUser }) => {
               placeholder="Ingrese el usuario..."
               className="input-lg"
               ref={usernameRef}
+              value={username}
               onChange={changeUsernameHandler}
             />
             {errors.username && (
@@ -101,6 +119,7 @@ const Login = ({ onUpdateUser }) => {
               type="password"
               placeholder="Ingrese la contraseña..."
               className="input-lg"
+              value={password}
               ref={passwordRef}
               onChange={changePasswordHandler}
             />
@@ -110,6 +129,13 @@ const Login = ({ onUpdateUser }) => {
           </Form.Group>
         </Row>
 
+        {errors.exist && (
+          <div className="mt-3 mb-3">
+            <Alert variant="danger">
+              El usuario o la contraseña es incorrecto.
+            </Alert>
+          </div>
+        )}
         {errors.notFunction && (
           <Row className="mb-3">
             <Alert variant="danger">
