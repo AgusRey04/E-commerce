@@ -8,7 +8,7 @@ const ProductList = ({ productList, onDeleteProduct, onNewPrice }) => {
     }
 
     return (
-        <div className="intenti>
+        <div className="intenti">
             {productList.length > 0 ? (
                 productList.map((p) => (
                     <ProductItem
