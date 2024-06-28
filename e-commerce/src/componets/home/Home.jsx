@@ -3,9 +3,6 @@ import NewProduct from "../newProduct/NewProduct";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
-
-const Home = ({ search }) => {
-
 const Home = ({ onloggedInUser,search }) => {
 
   const [product, setProduct] = useState([]);
@@ -163,7 +160,7 @@ const Home = ({ onloggedInUser,search }) => {
 };
 
 Home.propTypes = {
-  search: PropTypes.string
+  search: PropTypes.string,
   onloggedInUser: PropTypes.object,
 };
 
