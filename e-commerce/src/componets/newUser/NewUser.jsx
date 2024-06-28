@@ -1,7 +1,9 @@
 import { useReducer, useState } from "react";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 import { Card, Form, Row, Col, Button, Alert } from "react-bootstrap";
 import "./NewUser.css";
+
 const initialNewUserForm = {
   firstName: "",
   lastName: "",
@@ -135,7 +137,7 @@ const NewUser = ({ onNewUserDataSaved }) => {
     newUserFormReducer,
     initialNewUserForm
   );
-
+  const navigate = useNavigate();
   const [errors, setErrors] = useState({
     firstName: false,
     lastName: false,
@@ -146,9 +148,9 @@ const NewUser = ({ onNewUserDataSaved }) => {
     phone: false,
     address: false,
     mismatchPassword: false,
+    exist: false,
     serverError: false,
   });
-
   const submitNewUserHandler = async (event) => {
     event.preventDefault();
 
@@ -209,15 +211,35 @@ const NewUser = ({ onNewUserDataSaved }) => {
         });
 
         if (!response.ok) {
-          throw new Error("Error al agregar un usuario");
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            exist: true,
+          }));
+          return;
         }
 
         const data = await response.json();
         console.log("Usuario Agregado:", data);
-        onNewUserDataSaved(data);
         dispatch({ type: "RESET_FORM" });
+        onNewUserDataSaved(data);
+
+        setErrors({
+          firstName: false,
+          lastName: false,
+          username: false,
+          email: false,
+          password: false,
+          confirmPassword: false,
+          phone: false,
+          address: false,
+          mismatchPassword: false,
+          exist: false,
+          serverError: false,
+        });
+
+        navigate("/login");
       } catch (error) {
-        console.error("Error al agregar un usuario:", error);
+        console.log("Error al agregar un usuario:", error);
         setErrors((prevErrors) => ({
           ...prevErrors,
           serverError: true,
@@ -227,7 +249,7 @@ const NewUser = ({ onNewUserDataSaved }) => {
   };
 
   return (
-    <Card className="card-newuser " style={{ width: "50rem" }}>
+    <Card className="card-newuser" style={{ width: "50rem" }}>
       <Card.Body>
         <Form onSubmit={submitNewUserHandler}>
           <Row className="mb-3">
@@ -315,7 +337,6 @@ const NewUser = ({ onNewUserDataSaved }) => {
                 type="password"
                 placeholder="Ingresar contraseña..."
                 value={newUserForm.password}
-                isInvalid={errors.password}
                 onChange={(e) =>
                   dispatch({
                     type: "PASSWORD_UPDATE",
@@ -393,6 +414,12 @@ const NewUser = ({ onNewUserDataSaved }) => {
               Error al agregar un usuario. Inténtalo de nuevo más tarde.
             </Alert>
           )}
+          {errors.exist && (
+            <Alert variant="danger">
+              El usuario ya existe. Inténtalo con otro nombre de usuario o
+              email.
+            </Alert>
+          )}
           <Button variant="primary" type="submit">
             Registrarse
           </Button>
@@ -403,7 +430,7 @@ const NewUser = ({ onNewUserDataSaved }) => {
 };
 
 NewUser.propTypes = {
-  onNewUserDataSaved: PropTypes.func,
+  onNewUserDataSaved: PropTypes.object,
 };
 
 export default NewUser;
