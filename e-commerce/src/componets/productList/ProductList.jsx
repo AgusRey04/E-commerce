@@ -6,7 +6,7 @@ import ProductItem from '../productItem/ProductItem'
 const ProductList = ({ productList, onDeleteProduct, onNewPrice }) => {
     if (!productList || !Array.isArray(productList)) {
         return <p>No hay productos disponibles</p>;
-      }
+    }
 
     return (
         <div>
