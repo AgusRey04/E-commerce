@@ -27,6 +27,7 @@ const Header = ({ onSearch }) => {
   const handleSearch = (e) => {
     e.preventDefault();
     onSearch(query);
+    setQuery("")
   };
 
   return (
