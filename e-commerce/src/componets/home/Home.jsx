@@ -2,9 +2,34 @@ import ProductList from "../productList/ProductList";
 import NewProduct from "../newProduct/NewProduct";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-const Home = ({ onloggedInUser }) => {
+
+
+const Home = ({ search }) => {
+
+const Home = ({ onloggedInUser,search }) => {
+
   const [product, setProduct] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState()
   const [reload, setReload] = useState(true);
+
+
+  //------FILTRO-----
+
+  useEffect(() => {
+    if (search) {
+      const filtered = product.filter(
+        (product) =>
+          product.name.toLowerCase().includes(search.toLowerCase()) ||
+          product.brand.toLowerCase().includes(search.toLowerCase()) ||
+          product.type.toLowerCase().includes(search.toLowerCase())
+      );
+      setFilteredProducts(filtered);
+    } else {
+      setFilteredProducts(product);
+    }
+  }, [search, product]);
+
+
   //------PEDIDO DE LISTA DE PRODUCTOS
 
   useEffect(() => {
@@ -28,6 +53,7 @@ const Home = ({ onloggedInUser }) => {
   }, [reload]);
 
   //---------BORRAR PRODUCTO------------
+
   const deleteProduct = async (id) => {
     try {
       const response = await fetch(`http://localhost:8000/products/${id}`, {
@@ -46,8 +72,11 @@ const Home = ({ onloggedInUser }) => {
     } catch (error) {
       alert(error);
     }
+
   };
+
   //--------- AGRAGAR PRODUCTO---------------
+
   const saveProductDataHandler = async (enteredProductData) => {
     const productDto = {
       name: enteredProductData.productName,
@@ -83,7 +112,9 @@ const Home = ({ onloggedInUser }) => {
     }
     setReload(!reload);
   };
+
   //------- EDITAR PRECIO DEL PRODUCTO---------
+
   const sumbitNewPrice = async (newPrice, product) => {
     console.log("precio", newPrice);
     console.log("id", product.id);
@@ -114,6 +145,7 @@ const Home = ({ onloggedInUser }) => {
     setReload(!reload);
   };
 
+
   return (
     <div>
       {onloggedInUser && onloggedInUser.rol === "admin" ? (
@@ -122,7 +154,7 @@ const Home = ({ onloggedInUser }) => {
         ""
       )}
       <ProductList
-        productList={product}
+        productList={filteredProducts}
         onDeleteProduct={deleteProduct}
         onNewPrice={sumbitNewPrice}
       />
@@ -131,6 +163,7 @@ const Home = ({ onloggedInUser }) => {
 };
 
 Home.propTypes = {
+  search: PropTypes.string
   onloggedInUser: PropTypes.object,
 };
 

@@ -26,8 +26,10 @@ const Header = ({ onSearch, loggedInUser }) => {
     navigate("/cart");
   };
 
-  const handleSearch = () => {
+  const handleSearch = (e) => {
+    e.preventDefault();
     onSearch(query);
+    setQuery("")
   };
 
   return (
@@ -56,9 +58,11 @@ const Header = ({ onSearch, loggedInUser }) => {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
+
             <Button variant="outline-success" type="submit">
               Buscar
             </Button>
+
           </Form>
         </Navbar.Collapse>
       </Container>

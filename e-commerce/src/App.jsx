@@ -10,8 +10,12 @@ import NewUser from "./componets/newUser/NewUser";
 import { useState } from "react";
 import { useEffect } from "react";
 function App() {
+  const [search, setSearch] = useState()
   const [loggedInUser, setLoggedInUser] = useState(null);
-
+  
+ const handleSearch = (searchTerm) => {
+    setSearch(searchTerm)
+  }
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("logged_in_user"));
     if (user) {
@@ -28,12 +32,15 @@ function App() {
     setLoggedInUser(null);
   };
 
+
   const router = createBrowserRouter([
     {
       path: "/",
       element: (
-        <MaiLayout loggedInUser={loggedInUser}>
-          <Home onloggedInUser={loggedInUser} />
+
+        <MaiLayout onSearch={handleSearch} loggedInUser={loggedInUser}>
+          <Home search={search} onloggedInUser={loggedInUser} />
+
         </MaiLayout>
       ),
     },
