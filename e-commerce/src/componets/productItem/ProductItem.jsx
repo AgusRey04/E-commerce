@@ -5,7 +5,7 @@ import "./ProductItem.css";
 const ProductItem = ({ product, onDeleteProduct, onNewPrice }) => {
   const [showForm, setShowForm] = useState(false);
   const [newPrice, setNewPrice] = useState("");
-  const [userRol, setUserRol] = useState(false); // Inicialmente false
+  const [userRol, setUserRol] = useState(); // Inicialmente false
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("logged_in_user"));
