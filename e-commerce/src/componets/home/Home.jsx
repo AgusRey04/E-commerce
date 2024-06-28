@@ -121,6 +121,7 @@ const Home = ({ onloggedInUser }) => {
       ) : (
         ""
       )}
+
       <ProductList
         productList={product}
         onDeleteProduct={deleteProduct}

@@ -1,6 +1,6 @@
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
 import PropTypes from "prop-types";
-import { Card, Form, Row, Col, Button } from "react-bootstrap";
+import { Card, Form, Row, Col, Button, Alert } from "react-bootstrap";
 
 const initialNewUserForm = {
   firstName: "",
@@ -8,7 +8,7 @@ const initialNewUserForm = {
   username: "",
   email: "",
   password: "",
-  contfirmPassword: "",
+  confirmPassword: "",
   rol: "user",
   phone: "",
   address: "",
@@ -85,13 +85,14 @@ const newUserFormReducer = (state, action) => {
     case "CONFIRM_PASSWORD_UPDATE":
       return {
         ...state,
-        contfirmPassword: action.value,
+        confirmPassword: action.value,
         formValid:
           action.value &&
           state.firstName &&
           state.lastName &&
           state.username &&
           state.email &&
+          state.password &&
           state.phone &&
           state.address,
       };
@@ -129,24 +130,70 @@ const newUserFormReducer = (state, action) => {
   }
 };
 
-const NewUser = () => {
+const NewUser = ({ onNewUserDataSaved }) => {
   const [newUserForm, dispatch] = useReducer(
     newUserFormReducer,
     initialNewUserForm
   );
 
+  const [errors, setErrors] = useState({
+    firstName: false,
+    lastName: false,
+    username: false,
+    email: false,
+    password: false,
+    confirmPassword: false,
+    phone: false,
+    address: false,
+    mismatchPassword: false,
+    serverError: false,
+  });
+
   const submitNewUserHandler = async (event) => {
     event.preventDefault();
 
-    if (newUserForm.password === newUserForm.contfirmPassword) {
+    const {
+      firstName,
+      lastName,
+      username,
+      email,
+      password,
+      confirmPassword,
+      phone,
+      address,
+    } = newUserForm;
+    setErrors({
+      firstName: !firstName,
+      lastName: !lastName,
+      username: !username,
+      email: !email,
+      password: !password,
+      confirmPassword: !confirmPassword,
+      phone: !phone,
+      address: !address,
+      mismatchPassword: password !== confirmPassword,
+      serverError: false,
+    });
+
+    if (
+      firstName &&
+      lastName &&
+      username &&
+      email &&
+      password &&
+      confirmPassword &&
+      phone &&
+      address &&
+      password === confirmPassword
+    ) {
       const userDto = {
-        firstName: newUserForm.firstName,
-        lastName: newUserForm.lastName,
-        username: newUserForm.username,
-        email: newUserForm.email,
-        password: newUserForm.password,
-        phone: newUserForm.phone,
-        address: newUserForm.address,
+        firstName,
+        lastName,
+        username,
+        email,
+        password,
+        phone,
+        address,
         status: true,
         rol: newUserForm.rol,
       };
@@ -167,157 +214,191 @@ const NewUser = () => {
 
         const data = await response.json();
         console.log("Usuario Agregado:", data);
-        dispatch({
-          type: "RESET_FORM",
-        });
+        onNewUserDataSaved(data);
+        dispatch({ type: "RESET_FORM" });
       } catch (error) {
-        alert(error);
+        console.error("Error al agregar un usuario:", error);
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          serverError: true,
+        }));
       }
-    } else {
-      alert("Las contraseñas no coinciden");
     }
   };
 
   return (
-    <>
-      <Card style={{ width: "50rem" }}>
-        <Card.Body>
-          <Form onSubmit={submitNewUserHandler}>
-            <Row className="mb-3">
-              <Col>
-                <Form.Label>Nombre</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder=" Ingresar nombre..."
-                  value={newUserForm.firstName}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "FIRST_NAME_UPDATE",
-                      value: e.target.value,
-                    })
-                  }
-                />
-              </Col>
-              <Col>
-                <Form.Label>Apellido</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder=" Ingresar apellido..."
-                  value={newUserForm.lastName}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "LAST_NAME_UPDATE",
-                      value: e.target.value,
-                    })
-                  }
-                />
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Col>
-                <Form.Label>Usuario</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder=" Ingresar usuario..."
-                  value={newUserForm.username}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "USERNAME_UPDATE",
-                      value: e.target.value,
-                    })
-                  }
-                />
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Col>
-                <Form.Label>Email</Form.Label>
-                <Form.Control
-                  type="email"
-                  placeholder=" Ingresar email..."
-                  value={newUserForm.email}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "EMAIL_UPDATE",
-                      value: e.target.value,
-                    })
-                  }
-                />
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Col>
-                <Form.Label>Contraseña</Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder=" Ingresar contraseña..."
-                  value={newUserForm.password}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "PASSWORD_UPDATE",
-                      value: e.target.value,
-                    })
-                  }
-                />
-              </Col>
-              <Col>
-                <Form.Label>Confirmar Contraseña</Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder=" Confirmar contraseña..."
-                  value={newUserForm.contfirmPassword}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "CONFIRM_PASSWORD_UPDATE",
-                      value: e.target.value,
-                    })
-                  }
-                />
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Col>
-                <Form.Label>Teléfono</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder=" Ingresar teléfono..."
-                  value={newUserForm.phone}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "PHONE_UPDATE",
-                      value: e.target.value,
-                    })
-                  }
-                />
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Col>
-                <Form.Label>Dirección</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder=" Ingresar dirección..."
-                  value={newUserForm.address}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "ADDRESS_UPDATE",
-                      value: e.target.value,
-                    })
-                  }
-                />
-              </Col>
-            </Row>
-            <Button
-              variant="primary"
-              type="submit"
-              disabled={!newUserForm.formValid}
-            >
-              Registrarse
-            </Button>
-          </Form>
-        </Card.Body>
-      </Card>
-    </>
+    <Card style={{ width: "50rem" }}>
+      <Card.Body>
+        <Form onSubmit={submitNewUserHandler}>
+          <Row className="mb-3">
+            <Col>
+              <Form.Label>Nombre</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Ingresar nombre..."
+                value={newUserForm.firstName}
+                isInvalid={errors.firstName}
+                onChange={(e) =>
+                  dispatch({
+                    type: "FIRST_NAME_UPDATE",
+                    value: e.target.value,
+                  })
+                }
+              />
+              <Form.Control.Feedback type="invalid">
+                El nombre es requerido.
+              </Form.Control.Feedback>
+            </Col>
+            <Col>
+              <Form.Label>Apellido</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Ingresar apellido..."
+                value={newUserForm.lastName}
+                isInvalid={errors.lastName}
+                onChange={(e) =>
+                  dispatch({
+                    type: "LAST_NAME_UPDATE",
+                    value: e.target.value,
+                  })
+                }
+              />
+              <Form.Control.Feedback type="invalid">
+                El apellido es requerido.
+              </Form.Control.Feedback>
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Col>
+              <Form.Label>Usuario</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Ingresar usuario..."
+                value={newUserForm.username}
+                isInvalid={errors.username}
+                onChange={(e) =>
+                  dispatch({
+                    type: "USERNAME_UPDATE",
+                    value: e.target.value,
+                  })
+                }
+              />
+              <Form.Control.Feedback type="invalid">
+                El usuario es requerido.
+              </Form.Control.Feedback>
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Col>
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="Ingresar email..."
+                value={newUserForm.email}
+                isInvalid={errors.email}
+                onChange={(e) =>
+                  dispatch({
+                    type: "EMAIL_UPDATE",
+                    value: e.target.value,
+                  })
+                }
+              />
+              <Form.Control.Feedback type="invalid">
+                El email es requerido.
+              </Form.Control.Feedback>
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Col>
+              <Form.Label>Contraseña</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Ingresar contraseña..."
+                value={newUserForm.password}
+                isInvalid={errors.password}
+                onChange={(e) =>
+                  dispatch({
+                    type: "PASSWORD_UPDATE",
+                    value: e.target.value,
+                  })
+                }
+              />
+              <Form.Control.Feedback type="invalid">
+                La contraseña es requerida.
+              </Form.Control.Feedback>
+            </Col>
+            <Col>
+              <Form.Label>Confirmar Contraseña</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Confirmar contraseña..."
+                value={newUserForm.confirmPassword}
+                isInvalid={errors.confirmPassword || errors.mismatchPassword}
+                onChange={(e) =>
+                  dispatch({
+                    type: "CONFIRM_PASSWORD_UPDATE",
+                    value: e.target.value,
+                  })
+                }
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.confirmPassword
+                  ? "La confirmación de contraseña es requerida."
+                  : "Las contraseñas no coinciden."}
+              </Form.Control.Feedback>
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Col>
+              <Form.Label>Teléfono</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Ingresar teléfono..."
+                value={newUserForm.phone}
+                isInvalid={errors.phone}
+                onChange={(e) =>
+                  dispatch({
+                    type: "PHONE_UPDATE",
+                    value: e.target.value,
+                  })
+                }
+              />
+              <Form.Control.Feedback type="invalid">
+                El teléfono es requerido.
+              </Form.Control.Feedback>
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Col>
+              <Form.Label>Dirección</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Ingresar dirección..."
+                value={newUserForm.address}
+                isInvalid={errors.address}
+                onChange={(e) =>
+                  dispatch({
+                    type: "ADDRESS_UPDATE",
+                    value: e.target.value,
+                  })
+                }
+              />
+              <Form.Control.Feedback type="invalid">
+                La dirección es requerida.
+              </Form.Control.Feedback>
+            </Col>
+          </Row>
+          {errors.serverError && (
+            <Alert variant="danger">
+              Error al agregar un usuario. Inténtalo de nuevo más tarde.
+            </Alert>
+          )}
+          <Button variant="primary" type="submit">
+            Registrarse
+          </Button>
+        </Form>
+      </Card.Body>
+    </Card>
   );
 };
 
