@@ -1,6 +1,6 @@
 import { useReducer, useState } from "react";
 import PropTypes from "prop-types";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Importa el hook useNavigate
 import { Card, Form, Row, Col, Button, Alert } from "react-bootstrap";
 import "./NewUser.css";
 
@@ -14,119 +14,17 @@ const initialNewUserForm = {
   rol: "user",
   phone: "",
   address: "",
-  formValid: false,
 };
 
 const newUserFormReducer = (state, action) => {
   switch (action.type) {
-    case "FIRST_NAME_UPDATE":
+    case "UPDATE_FIELD":
       return {
         ...state,
-        firstName: action.value,
-        formValid:
-          action.value &&
-          state.lastName &&
-          state.username &&
-          state.email &&
-          state.password &&
-          state.phone &&
-          state.address,
-      };
-    case "LAST_NAME_UPDATE":
-      return {
-        ...state,
-        lastName: action.value,
-        formValid:
-          action.value &&
-          state.firstName &&
-          state.username &&
-          state.email &&
-          state.password &&
-          state.phone &&
-          state.address,
-      };
-    case "USERNAME_UPDATE":
-      return {
-        ...state,
-        username: action.value,
-        formValid:
-          action.value &&
-          state.firstName &&
-          state.lastName &&
-          state.email &&
-          state.password &&
-          state.phone &&
-          state.address,
-      };
-    case "EMAIL_UPDATE":
-      return {
-        ...state,
-        email: action.value,
-        formValid:
-          action.value &&
-          state.firstName &&
-          state.lastName &&
-          state.username &&
-          state.password &&
-          state.phone &&
-          state.address,
-      };
-    case "PASSWORD_UPDATE":
-      return {
-        ...state,
-        password: action.value,
-        formValid:
-          action.value &&
-          state.firstName &&
-          state.lastName &&
-          state.username &&
-          state.email &&
-          state.phone &&
-          state.address,
-      };
-    case "CONFIRM_PASSWORD_UPDATE":
-      return {
-        ...state,
-        confirmPassword: action.value,
-        formValid:
-          action.value &&
-          state.firstName &&
-          state.lastName &&
-          state.username &&
-          state.email &&
-          state.password &&
-          state.phone &&
-          state.address,
-      };
-    case "PHONE_UPDATE":
-      return {
-        ...state,
-        phone: action.value,
-        formValid:
-          action.value &&
-          state.firstName &&
-          state.lastName &&
-          state.username &&
-          state.email &&
-          state.address,
-      };
-    case "ADDRESS_UPDATE":
-      return {
-        ...state,
-        address: action.value,
-        formValid:
-          action.value &&
-          state.firstName &&
-          state.lastName &&
-          state.username &&
-          state.email &&
-          state.password &&
-          state.phone,
+        [action.field]: action.value,
       };
     case "RESET_FORM":
-      return {
-        ...initialNewUserForm,
-      };
+      return initialNewUserForm;
     default:
       return state;
   }
@@ -137,7 +35,6 @@ const NewUser = ({ onNewUserDataSaved }) => {
     newUserFormReducer,
     initialNewUserForm
   );
-  const navigate = useNavigate();
   const [errors, setErrors] = useState({
     firstName: false,
     lastName: false,
@@ -151,6 +48,8 @@ const NewUser = ({ onNewUserDataSaved }) => {
     exist: false,
     serverError: false,
   });
+  const navigate = useNavigate(); // Hook para redirección
+
   const submitNewUserHandler = async (event) => {
     event.preventDefault();
 
@@ -164,6 +63,7 @@ const NewUser = ({ onNewUserDataSaved }) => {
       phone,
       address,
     } = newUserForm;
+
     setErrors({
       firstName: !firstName,
       lastName: !lastName,
@@ -174,6 +74,7 @@ const NewUser = ({ onNewUserDataSaved }) => {
       phone: !phone,
       address: !address,
       mismatchPassword: password !== confirmPassword,
+      exist: false,
       serverError: false,
     });
 
@@ -215,29 +116,19 @@ const NewUser = ({ onNewUserDataSaved }) => {
             ...prevErrors,
             exist: true,
           }));
-          return;
+        } else {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            exist: false,
+            serverError: false,
+          }));
+          const data = await response.json();
+          console.log("Usuario Agregado:", data);
+          dispatch({ type: "RESET_FORM" });
+          navigate("/login");
+          onNewUserDataSaved(data);
+          alert("El usuario se agregó correctamente"); // Mostrar alerta de éxito al registrar de nuevo
         }
-
-        const data = await response.json();
-        console.log("Usuario Agregado:", data);
-        dispatch({ type: "RESET_FORM" });
-        onNewUserDataSaved(data);
-
-        setErrors({
-          firstName: false,
-          lastName: false,
-          username: false,
-          email: false,
-          password: false,
-          confirmPassword: false,
-          phone: false,
-          address: false,
-          mismatchPassword: false,
-          exist: false,
-          serverError: false,
-        });
-
-        navigate("/login");
       } catch (error) {
         console.log("Error al agregar un usuario:", error);
         setErrors((prevErrors) => ({
@@ -262,7 +153,8 @@ const NewUser = ({ onNewUserDataSaved }) => {
                 isInvalid={errors.firstName}
                 onChange={(e) =>
                   dispatch({
-                    type: "FIRST_NAME_UPDATE",
+                    type: "UPDATE_FIELD",
+                    field: "firstName",
                     value: e.target.value,
                   })
                 }
@@ -280,7 +172,8 @@ const NewUser = ({ onNewUserDataSaved }) => {
                 isInvalid={errors.lastName}
                 onChange={(e) =>
                   dispatch({
-                    type: "LAST_NAME_UPDATE",
+                    type: "UPDATE_FIELD",
+                    field: "lastName",
                     value: e.target.value,
                   })
                 }
@@ -300,7 +193,8 @@ const NewUser = ({ onNewUserDataSaved }) => {
                 isInvalid={errors.username}
                 onChange={(e) =>
                   dispatch({
-                    type: "USERNAME_UPDATE",
+                    type: "UPDATE_FIELD",
+                    field: "username",
                     value: e.target.value,
                   })
                 }
@@ -320,7 +214,8 @@ const NewUser = ({ onNewUserDataSaved }) => {
                 isInvalid={errors.email}
                 onChange={(e) =>
                   dispatch({
-                    type: "EMAIL_UPDATE",
+                    type: "UPDATE_FIELD",
+                    field: "email",
                     value: e.target.value,
                   })
                 }
@@ -337,9 +232,11 @@ const NewUser = ({ onNewUserDataSaved }) => {
                 type="password"
                 placeholder="Ingresar contraseña..."
                 value={newUserForm.password}
+                isInvalid={errors.password}
                 onChange={(e) =>
                   dispatch({
-                    type: "PASSWORD_UPDATE",
+                    type: "UPDATE_FIELD",
+                    field: "password",
                     value: e.target.value,
                   })
                 }
@@ -357,7 +254,8 @@ const NewUser = ({ onNewUserDataSaved }) => {
                 isInvalid={errors.confirmPassword || errors.mismatchPassword}
                 onChange={(e) =>
                   dispatch({
-                    type: "CONFIRM_PASSWORD_UPDATE",
+                    type: "UPDATE_FIELD",
+                    field: "confirmPassword",
                     value: e.target.value,
                   })
                 }
@@ -379,7 +277,8 @@ const NewUser = ({ onNewUserDataSaved }) => {
                 isInvalid={errors.phone}
                 onChange={(e) =>
                   dispatch({
-                    type: "PHONE_UPDATE",
+                    type: "UPDATE_FIELD",
+                    field: "phone",
                     value: e.target.value,
                   })
                 }
@@ -399,7 +298,8 @@ const NewUser = ({ onNewUserDataSaved }) => {
                 isInvalid={errors.address}
                 onChange={(e) =>
                   dispatch({
-                    type: "ADDRESS_UPDATE",
+                    type: "UPDATE_FIELD",
+                    field: "address",
                     value: e.target.value,
                   })
                 }
